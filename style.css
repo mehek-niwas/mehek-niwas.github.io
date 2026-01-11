@@ -51,7 +51,7 @@ nav {
   display: flex;
   justify-content: center;
   gap: 50px;
-  margin: 40px 0;
+  margin: 40px 0 20px 0;
 }
 
 /* Update this selector to target the class we added */
@@ -80,14 +80,15 @@ nav {
 main {
   display: grid;
   grid-template-columns: 300px 1fr;
-  gap: 40px;
+  gap: 0px;
   max-width: 1040px;
   margin: 0 auto;
-  padding: 40px;
+  padding: 20px 40px 40px 40px;
 }
 
 /* Image */
 .image img {
+  margin-top: 85px;
   width: 100%;
   image-rendering: pixelated;
 }
@@ -121,6 +122,7 @@ main {
 /* Text */
 .text h2 {
   font-size: 36px;
+  margin-top: 0px;
   margin-bottom: 10px;
 }
 
