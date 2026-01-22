@@ -119,15 +119,14 @@ main {
 }
 
 .image-container .main-img {
-  margin-top: 85px; /* matches previous .image img spacing */
-  display: block; /* removes baseline whitespace */
+  margin-top: 85px; 
+  display: block; 
   width: 100%;
   max-width: 100%;
-  height: auto; /* prevents overflow due to fixed height */
+  height: auto; 
   image-rendering: pixelated;
 }
 
-/* Your Flat Strategy Hover Images */
 .hover-img {
   position: absolute;
   opacity: 0;
@@ -136,17 +135,16 @@ main {
   z-index: 10;
 }
 
-/* The JS will add this class to everything with the .entropy-piece class */
+
 .show-piece {
   opacity: 1 !important;
   transform: scale(1.05); /* Optional "pop" effect */
 }
 
-/* New "Sticky" state */
+/* "Sticky" state */
 .is-active {
   opacity: 1 !important;
   visibility: visible !important;
-  /* You could add a border or glow here to show it's 'pinned' */
   filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
 }
 
