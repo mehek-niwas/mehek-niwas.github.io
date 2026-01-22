@@ -142,7 +142,7 @@ main {
 }
 
 .pixel-4 {
-  bottom: 19.9%; 
+  bottom: 15.9%; 
   right: 60.8%; 
   width: 18.9%; 
 }
@@ -180,28 +180,29 @@ main {
 }
 
 .nextera-2 {
-  top: 18.4%;  
+  top: 13.4%;  
   right: 96.5%; 
   width: 22.5%; 
 }
 
 .nextera-3 {
-  bottom: 29.8%; 
+  bottom: 35.8%; 
   right: 90.8%; 
-  width: 90.9%; 
+  width: 80.9%; 
 }
 
 .nextera-4 {
   bottom: 0%; 
   right: 60.8%; 
-  width: 88.9%; 
+  width: 80.9%; 
 }
 
 /* scraply */
 .scraply-1 {
   bottom: 43.8%; 
-  right: 90.8%; 
+  right: 85.8%; 
   width: 90.9%; 
+  border-radius: 3px;
 }
 
 /* entropy */
@@ -213,20 +214,20 @@ main {
 
 .entropy-2 {
   top: 10.4%;  
-  right: 93.5%; 
-  width: 63.5%; 
+  right: 83.5%; 
+  width: 55.5%; 
 }
 
 .entropy-3 {
   bottom: 13.8%; 
-  right: 110.8%; 
+  right: 100.8%; 
   width: 35.9%; 
 }
 
 .entropy-4 {
-  bottom: 6.7%; 
+  bottom: 0.7%; 
   right: 24.8%; 
-  width: 65.9%; 
+  width: 55.9%; 
 }
 
 /* touch */
