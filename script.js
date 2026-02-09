@@ -130,3 +130,30 @@ document.querySelectorAll('u:not(.trigger)').forEach(uElement => {
   });
 });
 
+// Choose initial image set on page load in order (excluding the "describe" one)
+window.addEventListener('DOMContentLoaded', () => {
+  const eligibleTriggers = Array.from(triggers).filter(
+    trigger => trigger.getAttribute('data-hover') !== 'describe-piece'
+  );
+
+  if (eligibleTriggers.length > 0) {
+    // Remember where we left off across page loads
+    const storageKey = 'mehek-initial-trigger-index';
+    const lastIndex = parseInt(localStorage.getItem(storageKey) || '0', 10);
+    const nextIndex = Number.isNaN(lastIndex)
+      ? 0
+      : (lastIndex + 1) % eligibleTriggers.length;
+
+    const chosenTrigger = eligibleTriggers[nextIndex];
+    localStorage.setItem(storageKey, String(nextIndex));
+
+    // Set this trigger as the active one and show its images
+    if (activeTrigger && activeTrigger !== chosenTrigger) {
+      hideImageSet(activeTrigger);
+    }
+
+    showImageSet(chosenTrigger);
+    activeTrigger = chosenTrigger;
+  }
+});
+
