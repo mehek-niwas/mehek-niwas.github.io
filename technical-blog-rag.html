@@ -33,16 +33,7 @@
   <div class="page-with-sidebar">
     <aside class="sidebar is-open">
       <button class="sidebar-toggle" aria-label="Toggle blog nav" aria-expanded="true">☰</button>
-      <nav class="blog-nav">
-        <h3>categories</h3>
-        <a href="technical-blog.html#cat-ml" class="nav-button">machine learning</a>
-        <a href="technical-blog.html#cat-interpretability" class="nav-button">interpretability</a>
-        <a href="technical-blog.html#cat-notes" class="nav-button">notes</a>
-
-        <h3 style="margin-top:16px;">series</h3>
-        <a href="technical-blog.html#series-vit" class="nav-button">vision transformers 101</a>
-        <a href="technical-blog.html#series-tooling" class="nav-button">tooling & infra</a>
-      </nav>
+      <div id="blog-nav-container"></div>
     </aside>
 
     <main class="blog-article-main page-main">
@@ -187,6 +178,7 @@ def rag_answer(question: str):
     <span>scroll back to the top</span>
   </button>
 
+  <script src="blog-nav.js"></script>
   <script src="script.js"></script>
   <script>
     // tiny keyword-based "rag" demo
