@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>retrieval-augmented generation (RAG) | mehek niwas</title>
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://mehek-niwas.github.io/technical-blog-rag" />
+  <meta name="google-site-verification" content="sfQppSHf2YRlye86crIw0Kkf3EwVQxGGUvQ1bZif5K8" />
+
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/webp" href="assets/wink_star.webp">
+</head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-HWFE3QDMRV"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-HWFE3QDMRV');
+</script>
+
+<body>
+  <!-- Main site navigation -->
+  <nav>
+    <a href="https://mehek-niwas.github.io" class="nav-button">home</a>
+    <a href="https://mehek-niwas.github.io/technical-blog" class="nav-button">technical-blog</a>
+    <a href="https://mehek-niwas.github.io/projects" class="nav-button">projects</a>
+    <a href="https://mehek-niwas.github.io/side-quests" class="nav-button">side quests</a>
+  </nav>
+
+  <div class="page-with-sidebar">
+    <aside class="sidebar is-open">
+      <button class="sidebar-toggle" aria-label="Toggle blog nav" aria-expanded="true">☰</button>
+      <nav class="blog-nav">
+        <h3>categories</h3>
+        <a href="technical-blog.html#cat-ml" class="nav-button">machine learning</a>
+        <a href="technical-blog.html#cat-interpretability" class="nav-button">interpretability</a>
+        <a href="technical-blog.html#cat-notes" class="nav-button">notes</a>
+
+        <h3 style="margin-top:16px;">series</h3>
+        <a href="technical-blog.html#series-vit" class="nav-button">vision transformers 101</a>
+        <a href="technical-blog.html#series-tooling" class="nav-button">tooling & infra</a>
+      </nav>
+    </aside>
+
+    <main class="blog-article-main page-main">
+      <article>
+      <header class="blog-article-header">
+        <p class="blog-article-kicker">technical-blog · retrieval-augmented generation</p>
+        <h2 id="rag-demo-post">hello this is just a vibe coded template. will edit soon!</h2>
+        <p class="blog-article-meta">YYYY-MM-DD · ml, llms, rag</p>
+      </header>
+
+      <section class="blog-article-section">
+        <p>
+          large language models are great at pattern matching, but they hallucinate when they have to invent facts.
+          retrieval-augmented generation (rag) fixes this by letting the model
+          <em>look things up</em> in an external knowledge base before answering.
+        </p>
+        <p>
+          in this post, we'll:
+        </p>
+        <ul>
+          <li>build a tiny rag demo that runs in your browser,</li>
+          <li>walk through the core architecture (indexing → retrieval → generation), and</li>
+          <li>sketch a python version you can scale up in a colab notebook.</li>
+        </ul>
+      </section>
+
+      <section class="blog-article-section">
+        <h3>rag in one picture</h3>
+        <p>conceptually, rag is just:</p>
+        <pre class="ascii-diagram"><code>user question
+     │
+     ▼
+ ┌───────────┐      ┌────────────────────┐
+ │ embedder  │      │  vector database   │
+ └───────────┘      └────────────────────┘
+        │   retrieve top-k chunks   ▲
+        └───────────────┬───────────┘
+                        │
+                        ▼
+                 ┌────────────┐
+                 │   llm      │
+                 └────────────┘
+                        │
+                        ▼
+                grounded answer ✔</code></pre>
+      </section>
+
+      <section class="blog-article-section">
+        <h3>browser demo: keyword-based "rag"</h3>
+        <p>
+          a full rag system needs embeddings + a vector database.
+          for a quick interactive demo, we can approximate retrieval with
+          a simple keyword overlap score over a tiny "corpus" of notes.
+        </p>
+
+        <div class="rag-demo">
+          <h4>try it</h4>
+          <p>ask a question about rag, and i'll show you which notes get "retrieved" and a toy answer.</p>
+
+          <label for="rag-question" class="rag-label">your question</label>
+          <textarea id="rag-question" class="rag-input" rows="3"
+            placeholder="e.g. how does rag reduce hallucinations?"></textarea>
+
+          <button id="rag-run" class="rag-button">run tiny rag demo</button>
+
+          <div id="rag-output" class="rag-output">
+            <div class="rag-retrieved">
+              <h5>retrieved notes</h5>
+              <ul id="rag-retrieved-list"></ul>
+            </div>
+            <div class="rag-answer">
+              <h5>answer</h5>
+              <p id="rag-answer-text">ask a question to see an answer here.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="blog-article-section">
+        <h3>python sketch: real rag with embeddings</h3>
+        <p>
+          below is a minimal python sketch you can adapt in a colab notebook
+          (for example, the one linked at the top of this post).
+        </p>
+        <pre><code class="language-python">from langchain_community.vectorstores import FAISS
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_openai import OpenAIEmbeddings, ChatOpenAI
+
+# 1. load & split documents
+raw_docs = [
+    "rag separates retrieval from generation...",
+    "use a vector database to store document embeddings...",
+    # add your own notes or PDFs here
+]
+
+splitter = RecursiveCharacterTextSplitter(
+    chunk_size=512,
+    chunk_overlap=64,
+)
+docs = splitter.create_documents(raw_docs)
+
+# 2. build the vector index
+embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+db = FAISS.from_documents(docs, embeddings)
+
+# 3. rag chain (retrieve + generate)
+llm = ChatOpenAI(model="gpt-4.1-mini")
+
+def rag_answer(question: str):
+    retrieved_docs = db.similarity_search(question, k=4)
+    context = "\n\n".join([d.page_content for d in retrieved_docs])
+
+    prompt = f"""
+    you are a helpful tutor. use ONLY the context below to answer.
+    if something isn't in the context, say you don't know.
+
+    context:
+    {context}
+
+    question: {question}
+    """
+
+    response = llm.invoke(prompt)
+    return response.content, retrieved_docs</code></pre>
+      </section>
+
+      <section class="blog-article-section">
+        <h3>where to go next</h3>
+        <ul>
+          <li>swap the toy browser demo with real embeddings via an api.</li>
+          <li>index your own notes, pdfs, or blog posts.</li>
+          <li>add evaluation: log retrieved chunks + answers and inspect failure modes.</li>
+        </ul>
+      </section>
+    </article>
+  </main>
+  </div>
+
+  <!-- Scroll to top button -->
+  <button id="scrollToTop" class="scroll-to-top" aria-label="Scroll back to top">
+    <img src="assets/pixel-art/sassy_frog.png" alt="Sassy Froggo" />
+    <span>scroll back to the top</span>
+  </button>
+
+  <script src="script.js"></script>
+  <script>
+    // tiny keyword-based "rag" demo
+    window.addEventListener('DOMContentLoaded', () => {
+      const docs = [
+        {
+          id: 'doc-architecture',
+          title: 'architecture: separate retrieval + generation',
+          text: 'rag separates retrieval from generation. we embed documents into a vector space and fetch top-k chunks before calling the llm.'
+        },
+        {
+          id: 'doc-hallucinations',
+          title: 'reducing hallucinations',
+          text: 'by conditioning the llm on retrieved context, rag reduces hallucinations and keeps answers grounded in the underlying data.'
+        },
+        {
+          id: 'doc-index',
+          title: 'indexing your notes',
+          text: 'you can build a rag system over your own notes, pdfs, and blog posts by chunking text, embedding it, and storing it in a vector database like faiss or chroma.'
+        },
+        {
+          id: 'doc-eval',
+          title: 'evaluating rag systems',
+          text: 'rag evaluation often looks at retrieval quality, answer faithfulness, and user-centric metrics like task success or latency.'
+        }
+      ];
+
+      const questionInput = document.getElementById('rag-question');
+      const runButton = document.getElementById('rag-run');
+      const retrievedList = document.getElementById('rag-retrieved-list');
+      const answerText = document.getElementById('rag-answer-text');
+
+      if (!questionInput || !runButton || !retrievedList || !answerText) return;
+
+      function score(docText, query) {
+        const qTokens = query.toLowerCase().split(/\W+/).filter(Boolean);
+        const dTokens = docText.toLowerCase().split(/\W+/).filter(Boolean);
+        const dSet = new Set(dTokens);
+        let hits = 0;
+        qTokens.forEach(t => {
+          if (dSet.has(t)) hits += 1;
+        });
+        return hits;
+      }
+
+      runButton.addEventListener('click', () => {
+        const q = questionInput.value.trim();
+        if (!q) {
+          answerText.textContent = 'type a question first!';
+          retrievedList.innerHTML = '';
+          return;
+        }
+
+        const scored = docs
+          .map(doc => ({ doc, s: score(doc.text, q) }))
+          .sort((a, b) => b.s - a.s);
+
+        const top = scored.slice(0, 3).filter(item => item.s > 0);
+
+        retrievedList.innerHTML = '';
+        if (top.length === 0) {
+          const li = document.createElement('li');
+          li.textContent = 'no relevant notes found — in a real rag system this is where better embeddings help.';
+          retrievedList.appendChild(li);
+          answerText.textContent = 'i do not have any notes that match this question yet.';
+          return;
+        }
+
+        top.forEach(item => {
+          const li = document.createElement('li');
+          li.innerHTML = '<strong>' + item.doc.title + '</strong><br><span>' + item.doc.text + '</span>';
+          retrievedList.appendChild(li);
+        });
+
+        const combinedContext = top.map(t => t.doc.text).join(' ');
+        answerText.textContent =
+          'based on these retrieved notes, a rag system would answer your question by focusing on:\n\n' +
+          combinedContext;
+      });
+    });
+  </script>
+</body>
+</html>
+
