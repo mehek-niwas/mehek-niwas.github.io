@@ -76,6 +76,212 @@ nav {
   color: #000;             /* Keeps text black even when hovering */
 }
 
+/* Left sidebar (used on technical-blog) */
+.sidebar {
+  position: relative;
+  width: 180px;
+  background: #ffc0da;
+  padding: 16px 12px 24px;
+  box-shadow: 4px 0 8px rgba(0, 0, 0, 0.08);
+  transition: width 0.25s ease;
+  z-index: 900;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow: hidden;
+}
+
+.sidebar.is-open {
+  width: 180px;
+}
+
+.sidebar:not(.is-open) {
+  width: 40px;
+}
+
+.sidebar-toggle {
+  align-self: flex-start;
+  width: 32px;
+  height: 32px;
+  border-radius: 0 8px 8px 0;
+  border: none;
+  background: #ffc0da;
+  cursor: pointer;
+  font-family: 'VT323', monospace;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 4px 0 8px rgba(0, 0, 0, 0.08);
+}
+
+.sidebar-toggle:hover {
+  background: hotpink;
+}
+
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 16px 0 0 0;
+}
+
+.sidebar .nav-button {
+  width: 100%;
+  text-align: left;
+}
+
+.sidebar:not(.is-open) .blog-nav {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.page-with-sidebar {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px 16px 40px 16px;
+  column-gap: 32px;
+}
+
+.page-main {
+  flex: 1;
+}
+
+/* Blog article layout */
+.blog-article-main {
+  display: block;
+  max-width: 1120px;
+  margin: 40px auto 60px;
+  padding: 0 20px;
+}
+
+.blog-article-header h2 {
+  font-family: 'VT323', monospace;
+  font-size: 36px;
+  margin-bottom: 8px;
+}
+
+.blog-article-kicker {
+  font-size: 18px;
+  opacity: 0.8;
+  margin-bottom: 4px;
+}
+
+.blog-article-meta {
+  font-size: 18px;
+  opacity: 0.8;
+}
+
+.blog-article-section {
+  margin-top: 32px;
+}
+
+.blog-article-section h3,
+.blog-article-section h4 {
+  font-size: 26px;
+  margin-bottom: 8px;
+}
+
+.blog-article-section p,
+.blog-article-section li {
+  font-size: 20px;
+  line-height: 1.3;
+}
+
+.blog-article-section ul {
+  padding-left: 20px;
+}
+
+.blog-article-main pre {
+  background: #fff;
+  border-radius: 8px;
+  padding: 12px 16px;
+  overflow-x: auto;
+  font-family: monospace;
+  font-size: 14px;
+}
+
+.blog-article-main code {
+  font-family: monospace;
+}
+
+.ascii-diagram {
+  font-size: 14px;
+}
+
+.rag-demo {
+  margin-top: 16px;
+  padding: 16px 16px 20px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid #eee;
+}
+
+.rag-label {
+  display: block;
+  font-size: 18px;
+  margin: 12px 0 4px;
+}
+
+.rag-input {
+  width: 100%;
+  font-family: 'VT323', monospace;
+  font-size: 18px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  resize: vertical;
+}
+
+.rag-button {
+  margin-top: 10px;
+  background: #ffc0da;
+  border: none;
+  padding: 8px 16px;
+  font-family: 'VT323', monospace;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.rag-button:hover {
+  background: hotpink;
+}
+
+.rag-output {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.rag-retrieved ul {
+  padding-left: 20px;
+}
+
+.rag-retrieved li {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.rag-answer p {
+  white-space: pre-wrap;
+  font-size: 18px;
+}
+
+@media (max-width: 900px) {
+  .blog-article-main {
+    margin: 24px auto 40px;
+    padding: 0 15px 40px;
+  }
+
+  .rag-output {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Main layout */
 main {
   display: grid;

@@ -22,8 +22,7 @@
 </script>
 
 <body>
-
-  <!-- Navigation -->
+  <!-- Main site navigation -->
   <nav>
     <a href="https://mehek-niwas.github.io" class="nav-button">home</a>
     <a href="https://mehek-niwas.github.io/technical-blog" class="nav-button">technical-blog</a>
@@ -31,24 +30,86 @@
     <a href="https://mehek-niwas.github.io/side-quests" class="nav-button">side quests</a>
   </nav>
 
-  <!-- Header -->
-<header>
-  <div class="name-wrapper">
-    <img src="assets/star.webp" class="star left" />
-    <h1>mehek niwas</h1>
-    <img src="assets/wink_star.webp" class="winkstar right" />
-  </div>
-</header>
+  <div class="page-with-sidebar">
+    <aside class="sidebar is-open">
+      <button class="sidebar-toggle" aria-label="Toggle blog nav" aria-expanded="false">☰</button>
+      <nav class="blog-nav">
+        <h3>categories</h3>
+        <a href="#cat-ml" class="nav-button">machine learning</a>
+        <a href="#cat-interpretability" class="nav-button">interpretability</a>
+        <a href="#cat-notes" class="nav-button">notes</a>
 
-  <!-- Main content -->
-  <main>
-    <div class="text" style="grid-column: 1 / -1; text-align: center; padding: 60px 20px;">
-      <h2>technical-blog</h2>
-      <p style="font-size: 24px; margin-top: 30px;">under construction 🚧</p>
-      <p style="font-size: 20px; margin-top: 20px;">coming soon!</p>
-      <img src="assets/tiny_kirby_magic.gif" alt="Kirby dancing" style="width:80px; height:auto; margin-top: 30px;">
+        <!-- <h3 style="margin-top:16px;">series</h3>
+        <a href="#series-vit" class="nav-button">vision transformers 101</a>
+        <a href="#series-tooling" class="nav-button">tooling & infra</a> -->
+      </nav>
+    </aside>
+
+    <div class="page-main">
+      <!-- Header -->
+      <header>
+        <div class="name-wrapper">
+          <img src="assets/star.webp" class="star left" />
+          <h1>mehek niwas</h1>
+          <img src="assets/wink_star.webp" class="winkstar right" />
+        </div>
+      </header>
+
+      <!-- Main content -->
+      <main>
+        <section class="text" style="grid-column: 1 / -1; padding: 40px 20px; max-width: 1120px; margin: 0 auto;">
+          <h2>technical-blog</h2>
+          <p style="margin-top: 20px;">
+            long-form notes on things im learning or i just think are cool
+          </p>
+          <p style="margin-top: 10px; font-size: 0.95rem; opacity: 0.9;">
+            this page is a skeleton for now. once posts are ready, they'll show up as cards below.
+          </p>
+        </section>
+
+        <!-- Blog post list skeleton -->
+        <section id="cat-ml" class="text" style="grid-column: 1 / -1; max-width: 1120px; margin: 0 auto 40px; display: flex; flex-direction: column; gap: 24px;">
+          <h3>machine learning</h3>
+          <!-- example post card – duplicate this block for new posts -->
+          <article class="blog-card" style="border: 1px solid #eee; border-radius: 12px; padding: 20px; background: rgba(255,255,255,0.85);">
+            <header>
+              <!-- replace href, title, date, and tags when you add a real post -->
+              <h3 style="margin-bottom: 6px;">
+                <a href="technical-blog-rag.html#rag-demo-post" style="text-decoration: none;">
+                  building a tiny retrieval-augmented generation (rag) demo
+                </a>
+              </h3>
+              <p style="font-size: 0.9rem; opacity: 0.8;">
+                <span>2026-02-09</span> · <span>ml, llms, rag</span>
+              </p>
+            </header>
+            <p style="margin-top: 12px; font-size: 0.98rem;">
+              just a template ! :D
+              <!-- short 1–2 sentence blurb about the post. explain what problem you're exploring and what someone might learn. -->
+            </p>
+          </article>
+
+          <!-- add more <article> blocks like the one above as you write posts -->
+        </section>
+
+        <section id="cat-interpretability" class="text" style="grid-column: 1 / -1; max-width: 1120px; margin: 0 auto 40px; display: flex; flex-direction: column; gap: 24px;">
+          <h3>interpretability</h3>
+          <!-- future interpretability posts go here -->
+        </section>
+
+        <section id="cat-notes" class="text" style="grid-column: 1 / -1; max-width: 1120px; margin: 0 auto 60px; display: flex; flex-direction: column; gap: 24px;">
+          <h3>notes</h3>
+          <!-- future notes / study posts go here -->
+        </section>
+      </main>
     </div>
-  </main>
+  </div>
+
+  <!-- Scroll to top button -->
+  <button id="scrollToTop" class="scroll-to-top" aria-label="Scroll back to top">
+    <img src="assets/pixel-art/sassy_frog.png" alt="Sassy Froggo" />
+    <span>scroll back to the top</span>
+  </button>
 
   <script src="script.js"></script>
 </body>

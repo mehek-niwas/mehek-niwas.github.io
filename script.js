@@ -130,6 +130,19 @@ document.querySelectorAll('u:not(.trigger)').forEach(uElement => {
   });
 });
 
+// Collapsible left sidebar (used on technical-blog page)
+window.addEventListener('DOMContentLoaded', () => {
+  const sidebar = document.querySelector('.sidebar');
+  const toggle = document.querySelector('.sidebar-toggle');
+
+  if (!sidebar || !toggle) return;
+
+  toggle.addEventListener('click', () => {
+    const isOpen = sidebar.classList.toggle('is-open');
+    toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  });
+});
+
 // Choose initial image set on page load in order (excluding the "describe" one)
 window.addEventListener('DOMContentLoaded', () => {
   const eligibleTriggers = Array.from(triggers).filter(
