@@ -50,6 +50,9 @@
   .refs a { color: #1a6fc4; text-decoration: none; }
   .refs a:hover { text-decoration: underline; }
   .section { margin-bottom: 2.5rem; }
+  .paper-pdf-top { font-family: system-ui, sans-serif; font-size: 14px; margin-bottom: 1rem; }
+  .paper-pdf-top a { color: #1a6fc4; text-decoration: none; font-weight: 500; }
+  .paper-pdf-top a:hover { text-decoration: underline; }
   @media (max-width: 560px) { .condition-grid { grid-template-columns: 1fr; } h1.paper-title { font-size: 22px; } }
   @media (prefers-color-scheme: dark) {
     body { background: #1a1a18; color: #e8e6df; }
@@ -82,11 +85,13 @@
     .refs li { border-color: #383836; color: #aaa; }
     .refs li::before { color: #777; }
     .refs a { color: #6baee8; }
+    .paper-pdf-top a { color: #6baee8; }
   }
 </style>
 </head>
 <body>
 <div class="page">
+  <p class="paper-pdf-top"><a href="https://drive.google.com/file/d/1VUAu0G2b3-uN2JC-unfZETI8ppfUSYLB/view?usp=sharing" target="_blank" rel="noopener noreferrer">Full paper (PDF)</a></p>
   <div class="venue-badge">HackPrinceton Spring 2026</div>
   <h1 class="paper-title">Investigating Internal Representations of Agent-to-Agent Communication</h1>
 
@@ -99,9 +104,8 @@
   <div class="affil">Princeton University &nbsp;·&nbsp; Spring 2026</div>
 
   <div class="links">
-    <a class="link-btn" href="#">📄 Paper (PDF)</a>
+    <a class="link-btn" href="https://drive.google.com/file/d/1VUAu0G2b3-uN2JC-unfZETI8ppfUSYLB/view?usp=sharing" target="_blank" rel="noopener noreferrer">📄 Paper (PDF)</a>
     <a class="link-btn" href="https://huggingface.co/datasets/stanfordnlp/craigslist_bargains">📊 Dataset</a>
-    <a class="link-btn" href="https://arxiv.org/abs/2403.10949">🔬 SelfIE</a>
     <a class="link-btn" href="#">💻 Code</a>
   </div>
 
