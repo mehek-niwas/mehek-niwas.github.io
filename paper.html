@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Investigating Internal Representations of Agent-to-Agent Communication</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Georgia, serif; background: #f9f8f6; color: #1a1a1a; }
+  .page { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  .venue-badge { display: inline-block; background: #f1efe8; border: 0.5px solid #c8c6bc; border-radius: 20px; font-family: system-ui, sans-serif; font-size: 12px; color: #666; padding: 4px 14px; margin-bottom: 1.5rem; letter-spacing: 0.04em; }
+  h1.paper-title { font-family: Georgia, serif; font-size: 28px; font-weight: 700; line-height: 1.35; color: #111; margin-bottom: 1.25rem; }
+  .authors { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-bottom: 0.4rem; }
+  .author { font-family: system-ui, sans-serif; font-size: 14.5px; color: #1a6fc4; }
+  .affil { font-family: system-ui, sans-serif; font-size: 13px; color: #666; margin-bottom: 1.5rem; }
+  .links { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 2.5rem; }
+  .link-btn { display: inline-flex; align-items: center; gap: 6px; font-family: system-ui, sans-serif; font-size: 13px; font-weight: 500; padding: 6px 14px; border-radius: 6px; border: 0.5px solid #bbb; background: #fff; color: #111; text-decoration: none; cursor: pointer; }
+  .link-btn:hover { background: #f1efe8; }
+  .abstract-box { background: #f1efe8; border-left: 3px solid #bbb; border-radius: 0 6px 6px 0; padding: 1.1rem 1.25rem; margin-bottom: 2.5rem; }
+  .abstract-box .label { font-family: system-ui, sans-serif; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; color: #999; text-transform: uppercase; margin-bottom: 0.5rem; }
+  .abstract-box p { font-size: 14.5px; line-height: 1.75; color: #444; }
+  hr.divider { border: none; border-top: 0.5px solid #ddd; margin: 2rem 0; }
+  h2.sec { font-family: system-ui, sans-serif; font-size: 18px; font-weight: 500; color: #111; margin-bottom: 0.9rem; padding-bottom: 0.4rem; border-bottom: 0.5px solid #ddd; }
+  h3.subsec { font-family: system-ui, sans-serif; font-size: 15px; font-weight: 500; color: #111; margin: 1.2rem 0 0.5rem; }
+  p.body { font-size: 15px; line-height: 1.8; color: #222; margin-bottom: 1rem; }
+  .fig-placeholder { background: #f1efe8; border: 0.5px dashed #bbb; border-radius: 8px; height: 160px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 1.25rem 0 0.5rem; gap: 6px; }
+  .fig-placeholder .fig-icon { font-size: 28px; opacity: 0.35; }
+  .fig-placeholder .fig-label { font-family: system-ui, sans-serif; font-size: 12px; color: #999; }
+  .fig-caption { font-family: system-ui, sans-serif; font-size: 12.5px; color: #555; line-height: 1.6; margin-bottom: 1.5rem; }
+  .fig-caption strong { font-weight: 500; color: #222; }
+  .condition-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 1rem 0 1.25rem; }
+  .condition-card { background: #fff; border: 0.5px solid #ddd; border-radius: 8px; padding: 0.85rem 1rem; }
+  .condition-card .cond-label { font-family: monospace; font-size: 11px; font-weight: 500; color: #999; margin-bottom: 4px; }
+  .condition-card .cond-title { font-family: system-ui, sans-serif; font-size: 13.5px; font-weight: 500; color: #111; margin-bottom: 4px; }
+  .condition-card p { font-size: 12.5px; line-height: 1.6; color: #555; }
+  .metric-box { background: #f1efe8; border-radius: 8px; padding: 1rem 1.25rem; margin: 1rem 0 1.25rem; font-family: monospace; font-size: 13.5px; line-height: 2; color: #222; overflow-x: auto; }
+  .metric-box .comment { color: #999; font-size: 12px; }
+  .result-item { border-left: 2px solid #bbb; padding: 0.4rem 0 0.4rem 1rem; margin-bottom: 0.75rem; }
+  .result-item .ri-label { font-family: system-ui, sans-serif; font-size: 12px; font-weight: 500; color: #999; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px; }
+  .result-item p { font-size: 14px; line-height: 1.7; color: #555; }
+  .finding-tag { display: inline-block; font-family: system-ui, sans-serif; font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 4px; background: #dbeafe; color: #1a6fc4; margin-right: 4px; }
+  .future-list { list-style: none; padding: 0; }
+  .future-list li { display: flex; gap: 10px; padding: 0.7rem 0; border-bottom: 0.5px solid #ddd; font-size: 14px; line-height: 1.65; color: #555; }
+  .future-list li:last-child { border-bottom: none; }
+  .future-list li .fi-head { font-family: system-ui, sans-serif; font-size: 13px; font-weight: 500; color: #111; min-width: 160px; }
+  .refs { list-style: none; counter-reset: ref-counter; padding: 0; }
+  .refs li { counter-increment: ref-counter; display: flex; gap: 10px; padding: 0.5rem 0; border-bottom: 0.5px solid #ddd; font-size: 13px; line-height: 1.65; color: #555; }
+  .refs li:last-child { border-bottom: none; }
+  .refs li::before { content: "[" counter(ref-counter) "]"; font-family: monospace; font-size: 11px; color: #999; min-width: 28px; padding-top: 2px; }
+  .refs a { color: #1a6fc4; text-decoration: none; }
+  .refs a:hover { text-decoration: underline; }
+  .section { margin-bottom: 2.5rem; }
+  @media (max-width: 560px) { .condition-grid { grid-template-columns: 1fr; } h1.paper-title { font-size: 22px; } }
+  @media (prefers-color-scheme: dark) {
+    body { background: #1a1a18; color: #e8e6df; }
+    .venue-badge { background: #2c2c2a; border-color: #444; color: #aaa; }
+    h1.paper-title { color: #f0ede4; }
+    .author { color: #6baee8; }
+    .affil { color: #aaa; }
+    .link-btn { background: #2c2c2a; border-color: #555; color: #e8e6df; }
+    .link-btn:hover { background: #383836; }
+    .abstract-box { background: #252523; border-left-color: #555; }
+    .abstract-box .label { color: #777; }
+    .abstract-box p { color: #aaa; }
+    hr.divider, h2.sec { border-color: #383836; }
+    h2.sec, h3.subsec { color: #f0ede4; }
+    p.body { color: #ccc; }
+    .fig-placeholder { background: #252523; border-color: #555; }
+    .fig-placeholder .fig-label { color: #777; }
+    .fig-caption { color: #999; }
+    .fig-caption strong { color: #ccc; }
+    .condition-card { background: #252523; border-color: #444; }
+    .condition-card .cond-title { color: #f0ede4; }
+    .condition-card p { color: #aaa; }
+    .metric-box { background: #252523; color: #ccc; }
+    .result-item { border-left-color: #555; }
+    .result-item .ri-label { color: #777; }
+    .result-item p { color: #aaa; }
+    .finding-tag { background: #1a3a5c; color: #6baee8; }
+    .future-list li { border-color: #383836; color: #aaa; }
+    .future-list li .fi-head { color: #f0ede4; }
+    .refs li { border-color: #383836; color: #aaa; }
+    .refs li::before { color: #777; }
+    .refs a { color: #6baee8; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="venue-badge">HackPrinceton Spring 2026</div>
+  <h1 class="paper-title">Investigating Internal Representations of Agent-to-Agent Communication</h1>
+
+  <div class="authors">
+    <span class="author">Mehek Niwas</span>
+    <span class="author">Abhi Patel</span>
+    <span class="author">Advik Lall</span>
+    <span class="author">Daniel Zhang</span>
+  </div>
+  <div class="affil">Princeton University &nbsp;·&nbsp; Spring 2026</div>
+
+  <div class="links">
+    <a class="link-btn" href="#">📄 Paper (PDF)</a>
+    <a class="link-btn" href="https://huggingface.co/datasets/stanfordnlp/craigslist_bargains">📊 Dataset</a>
+    <a class="link-btn" href="https://arxiv.org/abs/2403.10949">🔬 SelfIE</a>
+    <a class="link-btn" href="#">💻 Code</a>
+  </div>
+
+  <div class="abstract-box">
+    <div class="label">Abstract</div>
+    <p>Multi-agent systems built on large language models (LLMs) increasingly rely on natural language as their default communication substrate. However, compressing rich internal latent states into discrete token sequences fundamentally limits inter-agent communication depth. We introduce a two-arm experimental framework placing a <em>writer</em> agent (sender) and an <em>editor</em> agent (receiver) in a pairwise communication scenario using CraigslistBargains. We compare hidden-state injection against standard natural-language transmission, quantifying representational fidelity via a composite <em>Communication Gap</em> (CG) score combining Jensen–Shannon divergence and cosine distance. Experiments on Qwen 3.5 (27B) reveal systematic, token-level gaps exposing structural fragility in the natural-language bottleneck of agentic workflows.</p>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section">
+    <h2 class="sec">1. Introduction</h2>
+    <p class="body">We compare two methods of agent communication. A <em>writer</em> agent (sender) and an <em>editor</em> agent (receiver) are placed in a pairwise communication scenario drawn from the CraigslistBargains dataset. For each scenario, we apply injection and probing methods to compare hidden representations across two conditions:</p>
+    <div class="condition-grid">
+      <div class="condition-card">
+        <div class="cond-label">Condition B</div>
+        <div class="cond-title">Direct hidden-state injection</div>
+        <p>The writer's final-layer embeddings are injected directly into the editor's forward pass at token positions corresponding to the writer's output.</p>
+      </div>
+      <div class="condition-card">
+        <div class="cond-label">Condition C</div>
+        <div class="cond-title">Natural-language transmission</div>
+        <p>The writer's output tokens are passed to the editor as a standard text prompt through the conventional language channel.</p>
+      </div>
+    </div>
+    <p class="body">We use <strong>SelfIE</strong> to inspect the editor's internal understanding at specific token positions and layers associated with the writer's output. Representational fidelity is quantified via a composite metric combining Jensen–Shannon divergence and cosine similarity.</p>
+  </div>
+
+  <div class="section">
+    <h2 class="sec">2. Method</h2>
+    <h3 class="subsec">Task setup</h3>
+    <p class="body">We operationalize pairwise agent communication through a writer–editor scenario from CraigslistBargains. The <em>writer</em> agent drafts a buyer opening offer based on listing information; the <em>editor</em> agent evaluates and responds with feedback — an asymmetric setup mirroring common inter-agent workflows.</p>
+
+    <h3 class="subsec">Model</h3>
+    <p class="body">All experiments use <strong>Qwen 3.5 dense</strong> (27B parameters, no Mixture-of-Experts, 64 layers, 24 attention heads). Qwen was selected for its fully open architecture permitting embedding injection. Smaller models proved insufficiently expressive; larger models exceeded compute constraints.</p>
+
+    <h3 class="subsec">Communication Gap metric</h3>
+    <div class="metric-box">
+      <div>CG(B,C) = &beta; &middot; JSD(P<sub>B</sub> &Vert; P<sub>C</sub>) + &alpha; &middot; (1 &minus; cos(h<sub>B</sub>, h<sub>C</sub>))</div>
+      <div class="comment">— per-step composite score</div>
+      <div style="margin-top:8px;">CG&#772; = (1/T) &Sigma;<sub>t</sub> [ &beta; &middot; JS<sub>t</sub> + &alpha; &middot; (1 &minus; cos<sub>t</sub>) ]</div>
+      <div class="comment">— mean over T generation steps, &alpha; = &beta; = 0.5</div>
+    </div>
+    <p class="body">A higher CG indicates more information lost when the natural-language channel replaces direct latent transfer. JSD captures distributional divergence; cosine distance captures geometric drift in embedding space.</p>
+
+    <img src="figures/method_fig.png" style="width:100%;border-radius:8px;margin:1.25rem 0 0.5rem;">
+    <div class="fig-placeholder">
+      <div class="fig-icon">⬛</div>
+      <div class="fig-label">Figure 1 — methodology diagram (figures/method_fig.png)</div>
+    </div>
+    <p class="fig-caption"><strong>Figure 1.</strong> Diagram of the project methodology comparing direct latent transfer (Condition B) against natural-language transmission (Condition C).</p>
+  </div>
+
+  <div class="section">
+    <h2 class="sec">3. Dataset</h2>
+    <p class="body">We use the <strong>CraigslistBargains</strong> dataset, which provides a structured negotiation environment with buyer and seller roles that map naturally onto the writer–editor framing. For each example, the pipeline produces: (1) a buyer LLM generating an opening offer (writer); (2) a seller LLM responding with feedback (editor); (3) CG scores comparing text-channel and latent-channel representations via teacher forcing on the exact seller response.</p>
+  </div>
+
+  <div class="section">
+    <h2 class="sec">4. Results</h2>
+
+    <h3 class="subsec">Qualitative example</h3>
+    <div class="result-item">
+      <div class="ri-label">Bike listing · CG = 0.073</div>
+      <p><em>Writer:</em> "Hi, I'm interested in the Nishiki Colorado, but $101 is the most I can offer given the current market for vintage bikes."</p>
+    </div>
+    <div class="result-item">
+      <div class="ri-label">Editor feedback</div>
+      <p>"This draft is strong because it is polite, specific, and justifies the lowball offer…"</p>
+    </div>
+    <div class="result-item">
+      <div class="ri-label">Layer-wise CG trajectory</div>
+      <p>0.056 &rarr; 0.045 &rarr; 0.085 &rarr; 0.089 &rarr; 0.090 &nbsp;<span class="finding-tag">Low &amp; stable</span></p>
+    </div>
+    <p class="body">Low, stable CG values suggest that text faithfully represents the writer's reasoning in this case — a successful instance of pragmatic communication.</p>
+
+    <h3 class="subsec">Injection layer sensitivity</h3>
+    <img src="figures/per_step.png" style="width:100%;border-radius:8px;margin:1.25rem 0 0.5rem;">
+    <div class="fig-placeholder">
+      <div class="fig-icon">📈</div>
+      <div class="fig-label">Figure 2 — per-step CG at five injection layers (figures/per_step.png)</div>
+    </div>
+    <p class="fig-caption"><strong>Figure 2.</strong> Per-step CG at five injection layers (0, 16, 32, 47, 63) for an electronics scenario. Layer means range from 0.175 to 0.218, indicating <em>low sensitivity to injection depth</em>.</p>
+
+    <h3 class="subsec">Token-level decomposition</h3>
+    <img src="figures/cg_decomp.png" style="width:100%;border-radius:8px;margin:1.25rem 0 0.5rem;">
+    <div class="fig-placeholder">
+      <div class="fig-icon">📊</div>
+      <div class="fig-label">Figure 3 — CG decomposition at layer 32 (figures/cg_decomp.png)</div>
+    </div>
+    <p class="fig-caption"><strong>Figure 3.</strong> Per-step CG breakdown at injection layer 32, decomposed into distributional divergence (&beta;&middot;JS, orange) and geometric drift (&alpha;(1&minus;cos), blue). Left: high-CG scenarios. Right: low-CG scenarios.</p>
+
+    <p class="body">The decomposition reveals two qualitatively distinct components. <em>Geometric drift</em> exhibits a relatively stable, low-level baseline throughout generation. <em>Distributional divergence</em> is highly erratic, with localized spikes dominating total CG during acute misalignment events.</p>
+    <p class="body">Critically, several instances show the receiver perfectly aligning with the sender for multiple consecutive steps — CG approaching zero — only to suddenly diverge on a single token prediction. <strong>This mathematically validates the fragility of the natural-language bottleneck:</strong> a single misunderstood or ambiguous token can temporarily shatter the shared contextual distribution between communicating agents.</p>
+  </div>
+
+  <div class="section">
+    <h2 class="sec">5. Future Work</h2>
+    <ul class="future-list">
+      <li><span class="fi-head">Model selection</span> Scale to LLaMA 70B or K2V2 when compute allows; smaller models proved insufficiently expressive for injection.</li>
+      <li><span class="fi-head">Extended metrics</span> Investigate mutual information estimators and representation similarity analysis (RSA) beyond fixed-weight &alpha; = &beta; = 0.5.</li>
+      <li><span class="fi-head">Downstream performance</span> Correlate CG scores with downstream task outcomes; use metrics to steer agent behavior and enable communication compression.</li>
+      <li><span class="fi-head">Multi-agent extension</span> Extend beyond pairwise communication to chains of 3+ agents and tool-calling/orchestrator agents.</li>
+      <li><span class="fi-head">Safety implications</span> Use latent-space analysis to expose failure modes in agentic safety mechanisms, particularly where latent communication bypasses natural-language filters.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2 class="sec">References</h2>
+    <ol class="refs">
+      <li>Venkataramani et al. (2026). <em>MAS-ProVe: Understanding the Process Verification of Multi-Agent Systems.</em> <a href="https://arxiv.org/abs/2602.03053">arXiv:2602.03053</a></li>
+      <li>He et al. (2018). <em>Decoupling Strategy and Generation in Negotiation Dialogues.</em> <a href="https://arxiv.org/abs/1808.09637">arXiv:1808.09637</a></li>
+      <li>Tang et al. (2025). <em>Augmenting Multi-Agent Communication with State Delta Trajectory.</em> <a href="https://arxiv.org/pdf/2506.19209">arXiv:2506.19209</a></li>
+      <li>Du et al. (2026). <em>Enabling Agents to Communicate Entirely in Latent Space.</em> <a href="https://arxiv.org/pdf/2511.09149">arXiv:2511.09149</a></li>
+      <li>Chen et al. (2024). <em>SelfIE: Self-Interpretation of Large Language Model Embeddings.</em> <a href="https://arxiv.org/abs/2403.10949">arXiv:2403.10949</a></li>
+    </ol>
+  </div>
+</div>
+</body>
+</html>
