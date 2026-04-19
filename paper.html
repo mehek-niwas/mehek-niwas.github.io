@@ -148,10 +148,7 @@
     <p class="body">A higher CG indicates more information lost when the natural-language channel replaces direct latent transfer. JSD captures distributional divergence; cosine distance captures geometric drift in embedding space.</p>
 
     <img src="figures/method_fig.png" style="width:100%;border-radius:8px;margin:1.25rem 0 0.5rem;">
-    <div class="fig-placeholder">
-      <div class="fig-icon">⬛</div>
-      <div class="fig-label">Figure 1 — methodology diagram (figures/method_fig.png)</div>
-    </div>
+  
     <p class="fig-caption"><strong>Figure 1.</strong> Diagram of the project methodology comparing direct latent transfer (Condition B) against natural-language transmission (Condition C).</p>
   </div>
 
@@ -180,18 +177,10 @@
 
     <h3 class="subsec">Injection layer sensitivity</h3>
     <img src="figures/per_step.png" style="width:100%;border-radius:8px;margin:1.25rem 0 0.5rem;">
-    <div class="fig-placeholder">
-      <div class="fig-icon">📈</div>
-      <div class="fig-label">Figure 2 — per-step CG at five injection layers (figures/per_step.png)</div>
-    </div>
     <p class="fig-caption"><strong>Figure 2.</strong> Per-step CG at five injection layers (0, 16, 32, 47, 63) for an electronics scenario. Layer means range from 0.175 to 0.218, indicating <em>low sensitivity to injection depth</em>.</p>
 
     <h3 class="subsec">Token-level decomposition</h3>
     <img src="figures/cg_decomp.png" style="width:100%;border-radius:8px;margin:1.25rem 0 0.5rem;">
-    <div class="fig-placeholder">
-      <div class="fig-icon">📊</div>
-      <div class="fig-label">Figure 3 — CG decomposition at layer 32 (figures/cg_decomp.png)</div>
-    </div>
     <p class="fig-caption"><strong>Figure 3.</strong> Per-step CG breakdown at injection layer 32, decomposed into distributional divergence (&beta;&middot;JS, orange) and geometric drift (&alpha;(1&minus;cos), blue). Left: high-CG scenarios. Right: low-CG scenarios.</p>
 
     <p class="body">The decomposition reveals two qualitatively distinct components. <em>Geometric drift</em> exhibits a relatively stable, low-level baseline throughout generation. <em>Distributional divergence</em> is highly erratic, with localized spikes dominating total CG during acute misalignment events.</p>
