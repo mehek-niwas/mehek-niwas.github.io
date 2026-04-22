@@ -1,5 +1,5 @@
 /* Pixel font (optional but recommended) */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=VT323&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto:wght@400;500;700&family=VT323&display=swap');
 
 * {
   box-sizing: border-box;
@@ -156,23 +156,30 @@ nav {
   max-width: 1120px;
   margin: 40px auto 60px;
   padding: 0 20px;
+  font-family: 'Roboto', sans-serif;
 }
 
 .blog-article-header h2 {
   font-family: 'VT323', monospace;
   font-size: 36px;
   margin-bottom: 8px;
+  font-weight: normal;
 }
 
 .blog-article-kicker {
-  font-size: 18px;
-  opacity: 0.8;
-  margin-bottom: 4px;
+  font-family: 'VT323', monospace;
+  font-size: 20px;
+  line-height: 1.4;
+  color: #333;
+  margin: 0 0 8px;
 }
 
 .blog-article-meta {
-  font-size: 18px;
-  opacity: 0.8;
+  font-family: 'VT323', monospace;
+  font-size: 20px;
+  line-height: 1.35;
+  color: #555;
+  margin: 0;
 }
 
 .blog-article-section {
@@ -181,14 +188,26 @@ nav {
 
 .blog-article-section h3,
 .blog-article-section h4 {
+  font-family: 'VT323', monospace;
   font-size: 26px;
   margin-bottom: 8px;
+  font-weight: normal;
 }
 
 .blog-article-section p,
 .blog-article-section li {
-  font-size: 20px;
-  line-height: 1.3;
+  font-size: 14px;
+  line-height: 1.15;
+}
+
+.blog-article-main table {
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+}
+
+.blog-article-main table th,
+.blog-article-main table td {
+  font-weight: normal;
 }
 
 .blog-article-section ul {
@@ -204,8 +223,24 @@ nav {
   font-size: 14px;
 }
 
+/* Prism theme loads after style.css; these selectors win the cascade for 14px snippets. */
+.blog-article-main pre.line-numbers,
+.blog-article-main pre[class*="language-"] {
+  font-size: 14px;
+}
+
 .blog-article-main code {
   font-family: monospace;
+  font-size: 14px;
+}
+
+.blog-article-main pre code,
+.blog-article-main code[class*="language-"] {
+  font-size: 14px;
+}
+
+.blog-article-main pre .token {
+  font-size: 14px;
 }
 
 .ascii-diagram {
@@ -948,7 +983,8 @@ u.clicked {
   list-style: none;
 }
 
-.token {
+/* Scoped to LLM intro only — avoids clashing with Prism.js .token spans in code blocks */
+.tokenized-text .token {
   display: inline-block;
   border: 1px solid rgba(255, 192, 218, 0.7);
   border-radius: 4px;
@@ -961,21 +997,21 @@ u.clicked {
 
 /* BOS is nth-child(1), EOS is nth-child(14) — neither has class .token so they're skipped.
    The 12 word tokens sit at positions 2–13. */
-.token:nth-child(2)  { animation-delay: 0s; }
-.token:nth-child(3)  { animation-delay: 0.33s; }
-.token:nth-child(4)  { animation-delay: 0.67s; }
-.token:nth-child(5)  { animation-delay: 1s; }
-.token:nth-child(6)  { animation-delay: 1.33s; }
-.token:nth-child(7)  { animation-delay: 1.67s; }
-.token:nth-child(8)  { animation-delay: 2s; }
-.token:nth-child(9)  { animation-delay: 2.33s; }
-.token:nth-child(10) { animation-delay: 2.67s; }
-.token:nth-child(11) { animation-delay: 3s; }
-.token:nth-child(12) { animation-delay: 3.33s; }
-.token:nth-child(13) { animation-delay: 3.67s; }
+.tokenized-text .token:nth-child(2)  { animation-delay: 0s; }
+.tokenized-text .token:nth-child(3)  { animation-delay: 0.33s; }
+.tokenized-text .token:nth-child(4)  { animation-delay: 0.67s; }
+.tokenized-text .token:nth-child(5)  { animation-delay: 1s; }
+.tokenized-text .token:nth-child(6)  { animation-delay: 1.33s; }
+.tokenized-text .token:nth-child(7)  { animation-delay: 1.67s; }
+.tokenized-text .token:nth-child(8)  { animation-delay: 2s; }
+.tokenized-text .token:nth-child(9)  { animation-delay: 2.33s; }
+.tokenized-text .token:nth-child(10) { animation-delay: 2.67s; }
+.tokenized-text .token:nth-child(11) { animation-delay: 3s; }
+.tokenized-text .token:nth-child(12) { animation-delay: 3.33s; }
+.tokenized-text .token:nth-child(13) { animation-delay: 3.67s; }
 
 /* BOS / EOS special tokens */
-.token-special {
+.tokenized-text .token-special {
   font-style: italic;
   opacity: 0.65;
   /* border-style: dashed; */

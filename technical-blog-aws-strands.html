@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Multi-Agent BS Card Game with AWS Strands | mehek niwas</title>
+
+  <link rel="canonical" href="https://mehek-niwas.github.io/technical-blog-aws-strands" />
+  <meta name="google-site-verification" content="sfQppSHf2YRlye86crIw0Kkf3EwVQxGGUvQ1bZif5K8" />
+
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/webp" href="assets/wink_star.webp">
+  
+  <!-- Prism.js for syntax highlighting -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css" rel="stylesheet" />
+  
+  <!-- Custom Prism theme to match your pink aesthetic -->
+  <style>
+    /* Override Prism colors to match your site */
+    pre[class*="language-"] {
+      background: #fff;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin: 16px 0;
+      overflow-x: auto;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    
+    code[class*="language-"] {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 14px;
+    }
+    
+    /* Line numbers styling */
+    .line-numbers .line-numbers-rows {
+      border-right: 1px solid #ffc0da;
+      background: #ffe6f0;
+    }
+    
+    .line-numbers-rows > span:before {
+      color: #999;
+    }
+    
+    /* Inline code styling */
+    :not(pre) > code[class*="language-"] {
+      background: rgba(255, 192, 218, 0.2);
+      padding: 2px 6px;
+      border-radius: 3px;
+      color: #000;
+    }
+  </style>
+</head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-HWFE3QDMRV"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-HWFE3QDMRV');
+</script>
+
+<body>
+  <!-- Main site navigation -->
+  <nav>
+    <a href="https://mehek-niwas.github.io" class="nav-button">home</a>
+    <a href="https://mehek-niwas.github.io/technical-blog" class="nav-button">technical-blog</a>
+    <a href="https://mehek-niwas.github.io/projects" class="nav-button">projects</a>
+    <a href="https://mehek-niwas.github.io/side-quests" class="nav-button">side quests</a>
+  </nav>
+
+  <!-- Blog Article Content -->
+  <article class="blog-article-main">
+    
+    <!-- Article Header -->
+    <header class="blog-article-header">
+      <h2>Multi-Agent BS Card Game with AWS Strands</h2>
+      
+      <p class="blog-article-kicker">Building a bluffing card game where AI agents learn to lie, call BS, and improve through self-feedback loops.</p>
+      
+      <p class="blog-article-meta">
+        <span>2026-04-21</span> · <span>agentic ai, aws strands, multi-agent</span>
+      </p>
+    </header>
+
+    <!-- Introduction Section -->
+    <section class="blog-article-section">
+      <p>
+        BS is a card game where players take turns placing cards face-down on a pile, claiming they match the current target rank (ex: Ace, 1, Queen). You can lie about your cards. If someone calls "BS!", and the cards don't match your claim, you have to pick up the entire pile. If you were telling the truth, the caller picks it up. The first player to empty their hand wins the game.
+      </p>
+      <p>
+        If agents were to play this game, they need to be able to reason about incomplete information, bluff strategically, and react to the behavior of other agents.
+      </p>
+    </section>
+
+    <!-- What is AWS Strands -->
+    <section class="blog-article-section">
+      <h3>What is AWS Strands?</h3>
+      <p>
+        Strands is an open-source agentic framework from AWS. Instead of writing a ton of JSON schema to describe your tools, Strands allows you to write normal Python functions, simply adding <code>@tool</code> decorator to declare it as such. Strands reads your docstring and type hints to auto-generate the schema for you.
+      </p>
+      <p>
+        Strands also handles the tool-call loop internally, which runs automatically when your agent is called.
+      </p>
+    </section>
+
+    <!-- Install Packages & Model Setup -->
+    <section class="blog-article-section">
+      <h3>Install Packages & Model Setup</h3>
+      <p>
+        Install packages and import them.
+      </p>
+      <p>
+        For your LLM model, you can use one from AWS Bedrock or your own API key. AWS Strands works with both options.
+      </p>
+
+      <pre class="line-numbers"><code class="language-python">import os, json, requests
+
+from strands import Agent, tool
+from strands.models.litellm import LiteLLMModel
+
+# set your key
+os.environ['MISTRAL_API_KEY'] = ""  #@param
+
+# LiteLLM lets you swap model providers without changing your tool code
+model = LiteLLMModel(model_id="mistral/mistral-large-latest")
+</code></pre>
+    </section>
+
+    <!-- Card Deck -->
+    <section class="blog-article-section">
+      <h3>Card Deck</h3>
+      <p>
+        The Deck of Cards API (deckofcardsapi.com) will be used to handle the actual cards. This part requires hitting only 2 endpoints: one to create a shuffled deck, and one to draw all 52 cards.
+      </p>
+
+      <pre class="line-numbers"><code class="language-python">def setup_deck():
+    print("setup da deckofcards api")
+    res = requests.get("https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1").json()
+    deck_id = res['deck_id']
+    draw_res = requests.get(f"https://deckofcardsapi.com/api/deck/{deck_id}/draw/?count=52").json()
+
+    cards = []
+    for c in draw_res['cards']:
+        code = c['code']
+        if code.startswith('0'):
+            code = '10' + code[1:]  # normalize: '0S' → '10S'
+        cards.append(code)
+    return cards
+</code></pre>
+    </section>
+
+    <!-- Defining Tools -->
+    <section class="blog-article-section">
+      <h3>Defining Tools with @tool</h3>
+      <p>
+        Each tool is just a Python function. The docstring becomes the tool description that the LLM sees, and the type hints become the parameter schema. By using the <code>@tool</code> decorator, there is no JSON to manually maintain and pass into an agent.
+      </p>
+      <p>
+        Here is an example of a tool:
+      </p>
+
+      <pre class="line-numbers"><code class="language-python">@tool
+def play_cards(cards: list) -> str:
+    """Play 1 to 4 cards from your hand face-down. You must declare them as the target rank.
+    You can lie about what the cards actually are — that's the whole game!
+
+    Args:
+        cards: List of card codes from your hand to play (e.g. ['AS', 'AD']).
+    """
+    global game, current_player
+
+    hand = game.hands[current_player]
+
+    if not (1 <= len(cards) <= 4):
+        return "Error: You must play between 1 and 4 cards."
+    if not all(c in hand for c in cards):
+        return f"Error: Some cards aren't in your hand. Your hand is: {hand}"
+
+    for c in cards:
+        hand.remove(c)
+    game.center_pile.extend(cards)
+
+    target_rank = game.get_target_rank()
+    game.last_play = {"player": current_player, "count": len(cards), "cards": cards}
+
+    print(f"🃏 {current_player} played {len(cards)} card(s) claiming to be {target_rank}s.")
+    return f"Cards played successfully. You claimed they were {target_rank}s."
+</code></pre>
+    </section>
+
+    <!-- The Game Engine -->
+    <section class="blog-article-section">
+      <h3>The Game Engine</h3>
+      <p>
+        BSGame is a normal Python class that tracks the target hand that the players must place each turn, the center pile, and the last play. Dealing 5 cards per player keeps the demo quick (and uses less tokens if you are using an open source model or rate-limited model).
+      </p>
+
+      <pre class="line-numbers"><code class="language-python">RANKS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
+
+class BSGame:
+    def __init__(self, player_names):
+        self.players = player_names
+        self.hands = {name: [] for name in player_names}
+        self.center_pile = []
+        self.current_rank_index = 0
+        self.last_play = None
+        self.game_over = False
+
+        deck = setup_deck()
+        # deal 5 cards each for a quicker demo
+        for _ in range(5):
+            for name in self.players:
+                self.hands[name].append(deck.pop())
+
+    def get_target_rank(self):
+        return RANKS[self.current_rank_index]
+
+    def advance_rank(self):
+        self.current_rank_index = (self.current_rank_index + 1) % len(RANKS)
+
+    def print_state(self):
+        print("\n" + "="*40)
+        print(f"🎯 Target Rank: {self.get_target_rank()}")
+        print(f"🃏 Center Pile: {len(self.center_pile)} cards")
+        for p in self.players:
+            print(f"👤 {p}: {len(self.hands[p])} cards")
+        print("="*40 + "\n")
+</code></pre>
+    </section>
+
+    <!-- Initializing Agents -->
+    <section class="blog-article-section">
+      <h3>Initializing Agents</h3>
+      <p>
+        Each player is a Strands Agent. The agent is assigned a model, list of tools, and a system prompt. For this demo, the system is identical for all three players.
+      </p>
+      <p>
+        Even with the same instructions, the name given to each agent can change its behavior, because models have learned associations with certain names (cultural, gender, ethnicity, etc.). If you did not want this to affect agentic behavior, you should make sure the name does not enter the agent's context. This can be done by masking the name with something more neutral like a numerical ID.
+      </p>
+    </section>
+
+    <!-- Main Game Loop -->
+    <section class="blog-article-section">
+      <h3>Main Game Loop</h3>
+      <p>
+        The loop runs three phases for each turn:
+      </p>
+      <ol>
+        <li>Active player places down cards</li>
+        <li>All other players decide to call BS or pass</li>
+        <li>Cards are distributed (based on the results of the player reaction)</li>
+      </ol>
+      <p>
+        Since Strands handles the tool-call loop internally when you call <code>all_agents[name](prompt)</code>, you just pass a prompt and get a response back.
+      </p>
+
+      <pre class="line-numbers"><code class="language-python">while not game.game_over:
+    game.print_state()
+    active_name = names[turn_idx % len(names)]
+    current_player = active_name
+    target_rank = game.get_target_rank()
+
+    # ── phase 1: active player plays cards ──────────────────────
+    prompt = build_prompt(
+        active_name,
+        f"It is your turn. Target rank is {target_rank}. "
+        f"Your hand is {game.hands[active_name]}. "
+        "Play 1-4 cards using the play_cards tool."
+    )
+    all_agents[active_name](prompt)  # Strands runs the tool-call loop internally
+
+    # ── phase 2: other players react ────────────────────────────
+    bs_caller = None
+    for other_name in names:
+        if other_name == active_name:
+            continue
+        current_player = other_name
+        reaction_prompt = build_prompt(
+            other_name,
+            f"{active_name} played {game.last_play['count']} card(s) "
+            f"claiming to be {target_rank}s. Do you call BS or pass? "
+            "Use call_bs or pass_turn."
+        )
+        reaction = all_agents[other_name](reaction_prompt)
+
+        if response_contains(reaction, "BS_CALLED"):
+            bs_caller = other_name
+            print(f"🚨 {bs_caller} CALLED BS ON {active_name}! 🚨")
+            break
+
+    # ── phase 3: resolve the round ───────────────────────────────
+    if bs_caller:
+        actual_cards = game.last_play["cards"]
+        is_truth = all(c[:-1] == target_rank for c in actual_cards)
+
+        if is_truth:
+            print(f"✅ {active_name} told the TRUTH! {bs_caller} takes the pile.")
+            game.hands[bs_caller].extend(game.center_pile)
+        else:
+            print(f"❌ {active_name} LIED! {active_name} takes the pile.")
+            game.hands[active_name].extend(game.center_pile)
+
+        game.center_pile = []
+</code></pre>
+    </section>
+
+    <!-- build_prompt helper -->
+    <section class="blog-article-section">
+      <h3>build_prompt helper</h3>
+      <p>
+        Between turns, other agents may have sent chat messages that need to be delivered. build_prompt prepends any queued messages to an agent's next prompt.
+      </p>
+
+      <pre class="line-numbers"><code class="language-python">def build_prompt(player_name: str, core: str) -> str:
+    queued = pending_chats.pop(player_name, [])
+    if queued:
+        relay_block = "\n".join(queued)
+        return f"[Messages from other players since your last turn]\n{relay_block}\n\n{core}"
+    return core
+</code></pre>
+    </section>
+
+    <!-- Parsing Agent Responses -->
+    <section class="blog-article-section">
+      <h3>Parsing Agent Responses</h3>
+      <p>
+        Since Strands returns a response object with a content list rather than a plain string, we can check our sentinel value across all content blocks, including nested tool result blocks.
+      </p>
+
+      <pre class="line-numbers"><code class="language-python">def response_contains(response, keyword: str) -> bool:
+    """Check if any tool result in a Strands response contains a keyword."""
+    for block in response.message.get("content", []):
+        if not isinstance(block, dict):
+            continue
+        # tool_result blocks have a nested content list
+        if block.get("type") == "tool_result":
+            for inner in block.get("content", []):
+                if isinstance(inner, dict) and keyword in inner.get("text", ""):
+                    return True
+        if keyword in block.get("text", ""):
+            return True
+    return False
+</code></pre>
+    </section>
+
+    <!-- Self Feedback Loop -->
+    <section class="blog-article-section">
+      <h3>Self Feedback Loop</h3>
+      <p>
+        The game works, but right now the agents play the same way every game.
+      </p>
+      <p>
+        What if they improved after every round?
+      </p>
+      <p>
+        Something you could do is to add a coach agent that watches the game, tracks each player's bluff rate and win rate, and writes updated system prompts between rounds. The players improve; the coach adapts. This would be considered a multi-agent feedback loop.
+      </p>
+      <p>
+        Some metrics that you could add for a coach agent, given the game log:
+      </p>
+
+      <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+        <thead>
+          <tr style="background-color: #ffc0da;">
+            <th style="padding: 10px; text-align: left; border: 1px solid #eee;">Type</th>
+            <th style="padding: 10px; text-align: left; border: 1px solid #eee;">Metric</th>
+            <th style="padding: 10px; text-align: left; border: 1px solid #eee;">What it tells you</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding: 10px; border: 1px solid #eee;">Quantitative</td>
+            <td style="padding: 10px; border: 1px solid #eee;">Bluff success %</td>
+            <td style="padding: 10px; border: 1px solid #eee;">Is the agent's lying strategy working?</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid #eee;">Quantitative</td>
+            <td style="padding: 10px; border: 1px solid #eee;">Win rate across rounds</td>
+            <td style="padding: 10px; border: 1px solid #eee;">Is the agent actually improving?</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid #eee;">Quantitative</td>
+            <td style="padding: 10px; border: 1px solid #eee;">Avg turns to win</td>
+            <td style="padding: 10px; border: 1px solid #eee;">Is the agent playing efficiently?</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid #eee;">Qualitative</td>
+            <td style="padding: 10px; border: 1px solid #eee;">Did the agent adapt?</td>
+            <td style="padding: 10px; border: 1px solid #eee;">Is it reading the table, not just its hand?</td>
+          </tr>
+          <tr>
+            <td style="padding: 10px; border: 1px solid #eee;">Qualitative</td>
+            <td style="padding: 10px; border: 1px solid #eee;">Was it a "good" bluff?</td>
+            <td style="padding: 10px; border: 1px solid #eee;">LLM-as-a-judge can evaluate this</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Recap -->
+    <section class="blog-article-section">
+      <h3>Recap</h3>
+      <p>
+        This coding demo uses three Strands agents that share a global game state. Each agent has tools decorated with <code>@tool</code>. The chat tool injects messages into other agents' memories for inter-agent communication, enabling them to potentially form strategies (and trash talk). The main game loop implements three phases per turn: play, react, resolve.
+      </p>
+      <p>
+        Strands reduces the amount of boilerplate needed because it takes care of the tool-call loop internally. Check out the full documentation of Strands here: <a href="https://docs.aws.amazon.com/strands/" target="_blank" style="color: hotpink; text-decoration: underline;">Strands Agents — Open Source AI Agent SDK for Python & TypeScript</a>
+      </p>
+      <p>
+        Full code for this demo: <a href="https://github.com/rutgers-ml-ai/natural-lang-processing-spring26/blob/main/agentic_ai_aws_strands.ipynb" target="_blank" style="color: hotpink; text-decoration: underline;">natural-lang-processing-spring26/agentic_ai_aws_strands.ipynb</a>
+      </p>
+      <p>
+        To read other articles like this, check out the AWS Builder Center! You can sign up with this link: <a href="https://builder.aws.com/start?trk=e6cabb4a-7d9d-4513-a797-0915c779c424&sc_channel=el" target="_blank" style="color: hotpink; text-decoration: underline;">https://builder.aws.com/start</a>
+      </p>
+    </section>
+
+  </article>
+
+  <!-- Scroll to top button -->
+  <button id="scrollToTop" class="scroll-to-top" aria-label="Scroll back to top">
+    <img src="assets/pixel-art/sassy_frog.png" alt="Sassy Froggo" />
+    <span>scroll back to the top</span>
+  </button>
+
+  <script src="script.js"></script>
+  
+  <!-- Prism.js for syntax highlighting -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+</body>
+</html>
