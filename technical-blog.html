@@ -38,96 +38,72 @@
     </div>
   </header>
 
-  <div class="page-with-sidebar">
-    <aside class="sidebar is-open">
-      <button class="sidebar-toggle" aria-label="Toggle blog nav" aria-expanded="false">☰</button>
-      <div id="blog-nav-container"></div>
-    </aside>
+  <div class="llm-intro">
+    <p class="tokenized-text">
+      <span class="token-special">&lt;BOS&gt;</span>
+      <span class="token">technical</span>
+      <span class="token">notes</span>
+      <span class="token">on</span>
+      <span class="token">things</span>
+      <span class="token">i'm</span>
+      <span class="token">learning</span>
+      <span class="token-special">&lt;EOS&gt;</span>
+    </p>
+    <p class="llm-intro-sub"></p>
+  </div>
 
-    <div class="page-main">
-      <!-- Main content -->
-      <main>
-        <section class="text" style="grid-column: 1 / -1; padding: 10px 20px; max-width: 3000px; margin: 0 auto; width: 95%">
-          <!-- <h2>technical-blog</h2> -->
-          <p style="margin-top: 20px;">
-            long-form notes on things i'm learning or i just think are cool
-          </p>
-          <p style="margin-top: 10px; font-size: 0.95rem; opacity: 0.9;">
-            this page is a skeleton for now. once posts are ready, they'll show up as cards below.
-          </p>
-        </section>
+  <!-- LLM architecture layer layout -->
+  <div class="llm-layout">
 
-        <!-- Blog post list skeleton -->
-        <section id="cat-ml" class="text" style="grid-column: 1 / -1; max-width: 3000px; margin: 0 auto 40px; display: flex; flex-direction: column; gap: 24px; width: 90%;">
-          <h3>machine learning</h3>
-          <!-- example post card – duplicate this block for new posts -->
-          <article class="blog-card" style="border: 1px solid #eee; border-radius: 12px; padding: 20px; background: rgba(255,255,255,0.85);">
-            <header>
-              <!-- replace href, title, date, and tags when you add a real post -->
-              <h3 style="margin-bottom: 6px;">
-                <a href="technical-blog-rag.html" style="text-decoration: none;">
-                  hello this is just a template page! will edit soon :D
-                </a>
-              </h3>
-              <p style="font-size: 0.9rem; opacity: 0.8;">
-                <span>2026-02-09</span> · <span>ml, llms, rag</span>
-              </p>
-            </header>
-            <p style="margin-top: 12px; font-size: 0.98rem;">
-              just a template ! :D
-              <!-- short 1–2 sentence blurb about the post. explain what problem you're exploring and what someone might learn. -->
+    <div class="llm-connector"></div>
+
+    <div class="llm-layer" id="cat-agentic">
+      <div class="layer-label">agentic ai</div>
+      <div class="layer-cards">
+        <article class="blog-card">
+          <header>
+            <h3>
+              <a href="technical-blog-yabba.html">
+                hello this is just a template page! will edit soon :D x2
+              </a>
+            </h3>
+            <p class="blog-card-meta">
+              <span>2026-02-09</span> · <span>ml, llms, rag</span>
             </p>
-          </article>
-
-          <!-- add more <article> blocks like the one above as you write posts -->
-        </section>
-
-        <section id="cat-interpretability" class="text" style="grid-column: 1 / -1; max-width: 3000px; margin: 0 auto 40px; display: flex; flex-direction: column; gap: 24px; width: 90%;">
-          <h3>interpretability</h3>
-          <!-- example post card – duplicate this block for new posts -->
-          <article class="blog-card" style="border: 1px solid #eee; border-radius: 12px; padding: 20px; background: rgba(255,255,255,0.85);">
-            <header>
-              <!-- replace href, title, date, and tags when you add a real post -->
-              <h3 style="margin-bottom: 6px;">
-                <a href="technical-blog-yabba.html" style="text-decoration: none;">
-                  hello this is just a template page! will edit soon :D x2
-                </a>
-              </h3>
-              <p style="font-size: 0.9rem; opacity: 0.8;">
-                <span>2026-02-09</span> · <span>ml, llms, rag</span>
-              </p>
-            </header>
-            <p style="margin-top: 12px; font-size: 0.98rem;">
-              just a template ! :D x2
-            </p>
-          </article>
-
-        </section>
-
-        <section id="cat-notes" class="text" style="grid-column: 1 / -1; max-width: 3000px; margin: 0 auto 40px; display: flex; flex-direction: column; gap: 24px; width: 90%;">
-          <h3>notes</h3>
-          <!-- example post card – duplicate this block for new posts -->
-          <article class="blog-card" style="border: 1px solid #eee; border-radius: 12px; padding: 20px; background: rgba(255,255,255,0.85);">
-            <header>
-              <!-- replace href, title, date, and tags when you add a real post -->
-              <h3 style="margin-bottom: 6px;">
-                <a href="technical-blog-yabba2.html" style="text-decoration: none;">
-                  hello this is just a template page! will edit soon :D x3
-                </a>
-              </h3>
-              <p style="font-size: 0.9rem; opacity: 0.8;">
-                <span>2026-02-09</span> · <span>ml, llms, rag</span>
-              </p>
-            </header>
-            <p style="margin-top: 12px; font-size: 0.98rem;">
-              just a template ! :D x3
-            </p>
-          </article>
-        </section>
-
-
-      </main>
+          </header>
+          <p class="blog-card-blurb">just a template ! :D x2</p>
+        </article>
+        
+      </div>
     </div>
+
+    <div class="llm-connector"></div>
+
+    <div class="llm-layer" id="cat-interpretability">
+      <div class="layer-label">interpretability</div>
+      <div class="layer-cards">
+        <p class="layer-empty">coming soon...</p>
+      </div>
+    </div>
+
+    <div class="llm-connector"></div>
+
+    <div class="llm-layer" id="cat-ml">
+      <div class="layer-label">machine learning</div>
+      <div class="layer-cards">
+        <p class="layer-empty">coming soon...</p>
+      </div>
+    </div>
+
+    <div class="llm-connector"></div>
+
+    <div class="llm-layer" id="cat-notes">
+      <div class="layer-label">notes</div>
+      <div class="layer-cards">
+        <p class="layer-empty">coming soon...</p>
+      </div>
+    </div>
+
   </div>
 
   <!-- Scroll to top button -->
@@ -136,7 +112,6 @@
     <span>scroll back to the top</span>
   </button>
 
-  <script src="blog-nav.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

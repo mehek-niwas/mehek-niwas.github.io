@@ -807,6 +807,259 @@ u.clicked {
   }
 }
 
+/* ─── LLM-layer layout (technical-blog page) ─────────────────────────────── */
+
+/* Intro blurb */
+.llm-intro {
+  text-align: center;
+  padding: 30px 20px 20px;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.llm-intro p {
+  font-family: 'VT323', monospace;
+  font-size: 20px;
+  margin: 4px 0;
+}
+
+/* Outer container — stacks layers vertically */
+.llm-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 20px 60px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Individual layer block */
+.llm-layer {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  border: 2px solid #ffc0da;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.7);
+  overflow: hidden;
+  scroll-margin-top: 80px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.llm-layer:hover {
+  border-color: hotpink;
+  box-shadow: 0 4px 16px rgba(255, 105, 180, 0.15);
+}
+
+/* Rotated category label on the left */
+.layer-label {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  font-family: 'VT323', monospace;
+  font-size: 22px;
+  background: #ffc0da;
+  padding: 16px 12px;
+  width: 52px;
+  min-width: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+  user-select: none;
+  transition: background-color 0.2s ease;
+}
+
+.llm-layer:hover .layer-label {
+  background: hotpink;
+}
+
+/* Card area inside a layer */
+.layer-cards {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px 20px;
+}
+
+/* Placeholder text when a layer has no posts yet */
+.layer-empty {
+  font-family: 'VT323', monospace;
+  font-size: 18px;
+  opacity: 0.55;
+  margin: 0;
+}
+
+/* Animated dashed connector between layers — centered */
+.llm-connector {
+  width: 100%;
+  height: 40px;
+  position: relative;
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+.llm-connector::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 0;
+  bottom: 8px;
+  width: 2px;
+  background: repeating-linear-gradient(
+    to bottom,
+    hotpink 0px,
+    hotpink 5px,
+    transparent 5px,
+    transparent 10px
+  );
+  background-size: 2px 10px;
+  animation: dash-march 0.45s linear infinite;
+}
+
+.llm-connector::after {
+  content: '▼';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 13px;
+  color: hotpink;
+  opacity: 0.75;
+  line-height: 1;
+}
+
+@keyframes dash-march {
+  from { background-position: 0 0; }
+  to   { background-position: 0 10px; }
+}
+
+/* Tokenized intro text */
+.tokenized-text {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  margin: 0 0 8px;
+  padding: 0;
+  list-style: none;
+}
+
+.token {
+  display: inline-block;
+  border: 1px solid rgba(255, 192, 218, 0.7);
+  border-radius: 4px;
+  padding: 2px 9px;
+  font-family: 'VT323', monospace;
+  font-size: 21px;
+  background: rgba(255, 192, 218, 0.12);
+  animation: token-sweep 4s ease-in-out infinite;
+}
+
+/* BOS is nth-child(1), EOS is nth-child(14) — neither has class .token so they're skipped.
+   The 12 word tokens sit at positions 2–13. */
+.token:nth-child(2)  { animation-delay: 0s; }
+.token:nth-child(3)  { animation-delay: 0.33s; }
+.token:nth-child(4)  { animation-delay: 0.67s; }
+.token:nth-child(5)  { animation-delay: 1s; }
+.token:nth-child(6)  { animation-delay: 1.33s; }
+.token:nth-child(7)  { animation-delay: 1.67s; }
+.token:nth-child(8)  { animation-delay: 2s; }
+.token:nth-child(9)  { animation-delay: 2.33s; }
+.token:nth-child(10) { animation-delay: 2.67s; }
+.token:nth-child(11) { animation-delay: 3s; }
+.token:nth-child(12) { animation-delay: 3.33s; }
+.token:nth-child(13) { animation-delay: 3.67s; }
+
+/* BOS / EOS special tokens */
+.token-special {
+  font-style: italic;
+  opacity: 0.65;
+  /* border-style: dashed; */
+  font-size: 18px;
+  letter-spacing: 0.02em;
+}
+
+@keyframes token-sweep {
+  0%        { background: rgba(255, 192, 218, 0.12); border-color: rgba(255,192,218,0.55); }
+  8%        { background: hotpink; border-color: hotpink; box-shadow: 0 0 8px rgba(255,105,180,0.55); }
+  20%, 100% { background: rgba(255, 192, 218, 0.12); border-color: rgba(255,192,218,0.55); }
+}
+
+.llm-intro-sub {
+  opacity: 0.7;
+  font-size: 18px;
+  margin: 0;
+}
+
+/* Blog post cards */
+.blog-card {
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding: 14px 18px;
+  background: rgba(255, 255, 255, 0.85);
+  transition: box-shadow 0.2s ease;
+}
+
+.blog-card:hover {
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.blog-card header h3 {
+  font-family: 'VT323', monospace;
+  font-size: 22px;
+  font-weight: normal;
+  margin: 0 0 6px;
+}
+
+.blog-card header h3 a {
+  text-decoration: none;
+  color: #000;
+}
+
+.blog-card header h3 a:hover {
+  text-decoration: underline;
+  color: hotpink;
+}
+
+.blog-card-meta {
+  font-family: 'VT323', monospace;
+  font-size: 17px;
+  opacity: 0.75;
+  margin: 0;
+}
+
+.blog-card-blurb {
+  font-family: 'VT323', monospace;
+  font-size: 18px;
+  margin: 10px 0 0;
+}
+
+@media (max-width: 600px) {
+  .llm-layout {
+    padding: 0 10px 40px;
+  }
+
+  .layer-label {
+    font-size: 18px;
+    width: 44px;
+    min-width: 44px;
+    padding: 12px 8px;
+  }
+
+  .layer-cards {
+    padding: 12px 14px;
+  }
+
+  .cat-pills {
+    gap: 8px;
+    padding: 10px 15px 4px;
+  }
+}
+
 /* Extra small screens */
 @media (max-width: 480px) {
   main {
