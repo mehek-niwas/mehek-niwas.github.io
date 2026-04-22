@@ -223,8 +223,7 @@ nav {
   font-size: 14px;
 }
 
-/* Prism theme loads after style.css; these selectors win the cascade for 14px snippets. */
-.blog-article-main pre.line-numbers,
+/* Keep snippet sizing consistent regardless of syntax highlighter. */
 .blog-article-main pre[class*="language-"] {
   font-size: 14px;
 }
@@ -236,10 +235,6 @@ nav {
 
 .blog-article-main pre code,
 .blog-article-main code[class*="language-"] {
-  font-size: 14px;
-}
-
-.blog-article-main pre .token {
   font-size: 14px;
 }
 
@@ -983,7 +978,7 @@ u.clicked {
   list-style: none;
 }
 
-/* Scoped to LLM intro only — avoids clashing with Prism.js .token spans in code blocks */
+/* Scoped to LLM intro only — avoids clashing with syntax highlighter token spans in code blocks */
 .tokenized-text .token {
   display: inline-block;
   border: 1px solid rgba(255, 192, 218, 0.7);

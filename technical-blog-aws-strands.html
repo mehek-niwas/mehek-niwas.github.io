@@ -10,13 +10,12 @@
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" type="image/webp" href="assets/wink_star.webp">
   
-  <!-- Prism.js for syntax highlighting -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css" rel="stylesheet" />
+  <!-- Highlight.js for syntax highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
   
-  <!-- Custom Prism theme to match your pink aesthetic -->
+  <!-- Custom code block styling to match your pink aesthetic -->
   <style>
-    /* Override Prism colors to match your site */
+    /* Override syntax highlighting colors to match your site
     pre[class*="language-"] {
       background: #fff;
       border-radius: 8px;
@@ -28,20 +27,10 @@
       line-height: 1.5;
     }
     
-    code[class*="language-"] {
+    code[class*="language-pytho "] {
       font-family: 'Courier New', Courier, monospace;
       font-size: 14px;
-    }
-    
-    /* Line numbers styling */
-    .line-numbers .line-numbers-rows {
-      border-right: 1px solid #ffc0da;
-      background: #ffe6f0;
-    }
-    
-    .line-numbers-rows > span:before {
-      color: #999;
-    }
+    } */
     
     /* Inline code styling */
     :not(pre) > code[class*="language-"] {
@@ -116,7 +105,7 @@
         For your LLM model, you can use one from AWS Bedrock or your own API key. AWS Strands works with both options.
       </p>
 
-      <pre class="line-numbers"><code class="language-python">import os, json, requests
+      <pre><code class="language-python">import os, json, requests
 
 from strands import Agent, tool
 from strands.models.litellm import LiteLLMModel
@@ -136,7 +125,7 @@ model = LiteLLMModel(model_id="mistral/mistral-large-latest")
         The Deck of Cards API (deckofcardsapi.com) will be used to handle the actual cards. This part requires hitting only 2 endpoints: one to create a shuffled deck, and one to draw all 52 cards.
       </p>
 
-      <pre class="line-numbers"><code class="language-python">def setup_deck():
+      <pre><code class="language-python">def setup_deck():
     print("setup da deckofcards api")
     res = requests.get("https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1").json()
     deck_id = res['deck_id']
@@ -162,7 +151,7 @@ model = LiteLLMModel(model_id="mistral/mistral-large-latest")
         Here is an example of a tool:
       </p>
 
-      <pre class="line-numbers"><code class="language-python">@tool
+      <pre><code class="language-python">@tool
 def play_cards(cards: list) -> str:
     """Play 1 to 4 cards from your hand face-down. You must declare them as the target rank.
     You can lie about what the cards actually are — that's the whole game!
@@ -198,7 +187,7 @@ def play_cards(cards: list) -> str:
         BSGame is a normal Python class that tracks the target hand that the players must place each turn, the center pile, and the last play. Dealing 5 cards per player keeps the demo quick (and uses less tokens if you are using an open source model or rate-limited model).
       </p>
 
-      <pre class="line-numbers"><code class="language-python">RANKS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
+      <pre><code class="language-python">RANKS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
 
 class BSGame:
     def __init__(self, player_names):
@@ -257,7 +246,7 @@ class BSGame:
         Since Strands handles the tool-call loop internally when you call <code>all_agents[name](prompt)</code>, you just pass a prompt and get a response back.
       </p>
 
-      <pre class="line-numbers"><code class="language-python">while not game.game_over:
+      <pre><code class="language-python">while not game.game_over:
     game.print_state()
     active_name = names[turn_idx % len(names)]
     current_player = active_name
@@ -314,7 +303,7 @@ class BSGame:
         Between turns, other agents may have sent chat messages that need to be delivered. build_prompt prepends any queued messages to an agent's next prompt.
       </p>
 
-      <pre class="line-numbers"><code class="language-python">def build_prompt(player_name: str, core: str) -> str:
+      <pre><code class="language-python">def build_prompt(player_name: str, core: str) -> str:
     queued = pending_chats.pop(player_name, [])
     if queued:
         relay_block = "\n".join(queued)
@@ -330,7 +319,7 @@ class BSGame:
         Since Strands returns a response object with a content list rather than a plain string, we can check our sentinel value across all content blocks, including nested tool result blocks.
       </p>
 
-      <pre class="line-numbers"><code class="language-python">def response_contains(response, keyword: str) -> bool:
+      <pre><code class="language-python">def response_contains(response, keyword: str) -> bool:
     """Check if any tool result in a Strands response contains a keyword."""
     for block in response.message.get("content", []):
         if not isinstance(block, dict):
@@ -427,9 +416,8 @@ class BSGame:
 
   <script src="script.js"></script>
   
-  <!-- Prism.js for syntax highlighting -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+  <!-- Highlight.js for syntax highlighting -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
 </body>
 </html>
