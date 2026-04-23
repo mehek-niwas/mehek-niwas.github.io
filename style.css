@@ -307,6 +307,61 @@ nav {
     padding: 0 15px 40px;
   }
 
+  .blog-article-header h2 {
+    font-size: 28px;
+  }
+
+  .blog-article-section h3,
+  .blog-article-section h4 {
+    font-size: 22px;
+  }
+
+  .blog-article-section p,
+  .blog-article-section li {
+    font-size: 16px !important;
+    line-height: 1.5 !important;
+  }
+
+  .blog-article-kicker {
+    font-size: 18px !important;
+  }
+
+  .blog-article-meta {
+    font-size: 18px !important;
+  }
+
+  /* Make code blocks horizontally scrollable on mobile */
+  .blog-article-main pre {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    max-width: 100%;
+    font-size: 13px !important;
+  }
+
+  .blog-article-main pre code {
+    font-size: 13px !important;
+  }
+
+  /* Make tables scrollable on mobile */
+  .blog-article-main table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    max-width: 100%;
+    font-size: 13px;
+  }
+
+  .blog-article-main table th,
+  .blog-article-main table td {
+    padding: 8px;
+    white-space: nowrap;
+  }
+
+  /* Adjust ordered lists */
+  .blog-article-section ol {
+    padding-left: 20px;
+  }
+
   .rag-output {
     grid-template-columns: 1fr;
   }
@@ -1088,6 +1143,52 @@ u.clicked {
   .cat-pills {
     gap: 8px;
     padding: 10px 15px 4px;
+  }
+
+  /* Blog article adjustments for small screens */
+  .blog-article-main {
+    padding: 0 12px 30px;
+  }
+
+  .blog-article-header h2 {
+    font-size: 24px !important;
+  }
+
+  .blog-article-kicker {
+    font-size: 17px !important;
+  }
+
+  .blog-article-meta {
+    font-size: 16px !important;
+  }
+
+  .blog-article-section h3,
+  .blog-article-section h4 {
+    font-size: 20px !important;
+  }
+
+  .blog-article-section p,
+  .blog-article-section li {
+    font-size: 15px !important;
+    line-height: 1.6 !important;
+  }
+
+  .blog-article-main pre {
+    font-size: 12px !important;
+    padding: 10px 12px;
+  }
+
+  .blog-article-main pre code {
+    font-size: 12px !important;
+  }
+
+  .blog-article-main table {
+    font-size: 12px !important;
+  }
+
+  .blog-article-main table th,
+  .blog-article-main table td {
+    padding: 6px;
   }
 }
 
