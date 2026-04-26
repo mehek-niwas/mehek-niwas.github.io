@@ -40,6 +40,18 @@
       border-radius: 3px;
       color: #000;
     }
+
+    /* Architecture diagram animations */
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.6;
+        transform: scale(1.2);
+      }
+    }
   </style>
 </head>
 <!-- Google tag (gtag.js) -->
@@ -83,6 +95,369 @@
       <p>
         If agents were to play this game, they need to be able to reason about incomplete information, bluff strategically, and react to the behavior of other agents.
       </p>
+    </section>
+
+    <!-- Architecture Diagram -->
+    <section class="blog-article-section">
+      <div class="arch-diagram">
+        <style>
+          .arch-diagram {
+            background: #fafafa;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 40px 24px;
+            margin: 32px 0;
+            overflow-x: auto;
+          }
+          .arch-diagram-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            font-family: 'Courier New', monospace;
+          }
+          .arch-diagram-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+          }
+          .arch-diagram-status {
+            font-size: 11px;
+            color: #888;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+          }
+          .arch-diagram-status::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: #22c55e;
+            border-radius: 50%;
+            animation: statusPulse 2s ease-in-out infinite;
+          }
+          @keyframes statusPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+          }
+          .arch-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+          }
+          .arch-node {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 16px 20px;
+            font-family: 'Courier New', monospace;
+            position: relative;
+            min-width: 120px;
+            text-align: center;
+          }
+          .arch-node-api {
+            border-color: #a78bfa;
+            border-width: 2px;
+          }
+          .arch-node-api .arch-node-label {
+            color: #7c3aed;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+          }
+          .arch-node-api .arch-node-name {
+            color: #333;
+            font-size: 13px;
+            margin-top: 4px;
+          }
+          .arch-node-orchestrator {
+            border-color: #f97316;
+            border-width: 2px;
+            background: linear-gradient(135deg, #fff9f5 0%, #fff 100%);
+          }
+          .arch-node-orchestrator .arch-node-label {
+            color: #ea580c;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+          }
+          .arch-node-orchestrator .arch-node-name {
+            color: #333;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: Georgia, serif;
+            font-style: italic;
+            margin-top: 6px;
+          }
+          .arch-node-agent {
+            border-color: #ec4899;
+            border-width: 2px;
+            min-width: 100px;
+          }
+          .arch-node-agent .arch-node-label {
+            color: #db2777;
+            font-size: 10px;
+            font-weight: 600;
+          }
+          .arch-node-agent .arch-node-name {
+            color: #333;
+            font-size: 12px;
+            margin-top: 4px;
+          }
+          .arch-node-tools {
+            background: #fdf2f8;
+            border: 1px dashed #f9a8d4;
+            border-radius: 4px;
+            padding: 6px 10px;
+            margin-top: 8px;
+            font-size: 10px;
+            color: #be185d;
+          }
+          .arch-node-end {
+            border-color: #22c55e;
+            border-width: 2px;
+          }
+          .arch-node-end .arch-node-label {
+            color: #16a34a;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+          }
+          .arch-node-end .arch-node-name {
+            color: #333;
+            font-size: 13px;
+            margin-top: 4px;
+          }
+          .arch-node-end .arch-node-condition {
+            font-size: 9px;
+            color: #666;
+            margin-top: 4px;
+          }
+          .arch-arrow {
+            display: flex;
+            align-items: center;
+            position: relative;
+            height: 2px;
+            min-width: 60px;
+            background: #ddd;
+          }
+          .arch-arrow::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            border: 5px solid transparent;
+            border-left-color: #ddd;
+          }
+          .arch-arrow-label {
+            position: absolute;
+            top: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Courier New', monospace;
+            font-size: 9px;
+            color: #888;
+            white-space: nowrap;
+          }
+          .arch-arrow .arch-dot {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #a78bfa;
+            border-radius: 50%;
+            animation: flowDot 2s linear infinite;
+          }
+          @keyframes flowDot {
+            0% { left: 0; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { left: calc(100% - 6px); opacity: 0; }
+          }
+          .arch-agents-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            position: relative;
+          }
+          .arch-cards-stack {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+          }
+          .arch-card {
+            width: 32px;
+            height: 44px;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+          }
+          .arch-card-hearts, .arch-card-diamonds { color: #dc2626; }
+          .arch-card-spades, .arch-card-clubs { color: #1f2937; }
+          .arch-cards-label {
+            font-family: 'Courier New', monospace;
+            font-size: 9px;
+            color: #888;
+            margin-top: 4px;
+          }
+          .arch-section {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+          }
+          .arch-vertical-arrows {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: flex-start;
+          }
+          .arch-h-arrow {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+          }
+          .arch-h-arrow-line {
+            width: 40px;
+            height: 2px;
+            background: linear-gradient(90deg, #f97316, #ec4899);
+            position: relative;
+          }
+          .arch-h-arrow-line::after {
+            content: '';
+            position: absolute;
+            right: -4px;
+            top: -3px;
+            border: 4px solid transparent;
+            border-left-color: #ec4899;
+          }
+          .arch-h-arrow-line .arch-dot {
+            background: #f97316;
+            animation-duration: 1.5s;
+          }
+          .arch-loop-arrow {
+            position: relative;
+            width: 30px;
+            height: 20px;
+          }
+          .arch-loop-arrow svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+          }
+        </style>
+
+        <div class="arch-diagram-header">
+          <span class="arch-diagram-title">SYSTEM_ARCHITECTURE.diagram</span>
+          <span class="arch-diagram-status">live data flow</span>
+        </div>
+
+        <div class="arch-flow">
+
+          <!-- Arrow to Orchestrator -->
+          <div class="arch-arrow">
+            <div class="arch-dot"></div>
+          </div>
+
+          <!-- Orchestrator -->
+          <div class="arch-node arch-node-orchestrator">
+            <div class="arch-node-label">Goal</div>
+            <div class="arch-node-name">WIN A<br>GAME OF BS</div>
+          </div>
+
+          <!-- Arrows to Agents -->
+          <div class="arch-vertical-arrows">
+            <div class="arch-h-arrow">
+              <span style="font-family: 'Courier New', monospace; font-size: 8px; color: #888;">system_prompt</span>
+              <div class="arch-h-arrow-line"><div class="arch-dot"></div></div>
+            </div>
+            <div class="arch-h-arrow">
+              <span style="font-family: 'Courier New', monospace; font-size: 8px; color: #888;">system_prompt</span>
+              <div class="arch-h-arrow-line"><div class="arch-dot" style="animation-delay: 0.5s;"></div></div>
+            </div>
+            <div class="arch-h-arrow">
+              <span style="font-family: 'Courier New', monospace; font-size: 8px; color: #888;">system_prompt</span>
+              <div class="arch-h-arrow-line"><div class="arch-dot" style="animation-delay: 1s;"></div></div>
+            </div>
+          </div>
+
+          <!-- Agents Group -->
+          <div class="arch-agents-group" style="margin-top: 20px;">
+            <div class="arch-node arch-node-agent">
+              <div class="arch-node-label">player_agent</div>
+              <div class="arch-node-tools">tools</div>
+              <svg width="24" height="16" viewBox="0 0 24 16" style="position: absolute; bottom: -8px; right: -12px;">
+                <path d="M2,8 Q12,16 22,8 Q12,0 2,8" fill="none" stroke="#ec4899" stroke-width="1.5" stroke-dasharray="2,2"/>
+                <circle r="2" fill="#ec4899">
+                  <animateMotion dur="2s" repeatCount="indefinite" path="M2,8 Q12,16 22,8"/>
+                </circle>
+              </svg>
+            </div>
+            <div class="arch-node arch-node-agent">
+              <div class="arch-node-label">player_agent</div>
+              <div class="arch-node-tools">tools</div>
+              <svg width="24" height="16" viewBox="0 0 24 16" style="position: absolute; bottom: -8px; right: -12px;">
+                <path d="M2,8 Q12,16 22,8 Q12,0 2,8" fill="none" stroke="#ec4899" stroke-width="1.5" stroke-dasharray="2,2"/>
+                <circle r="2" fill="#ec4899">
+                  <animateMotion dur="2.3s" repeatCount="indefinite" path="M2,8 Q12,16 22,8"/>
+                </circle>
+              </svg>
+            </div>
+            <div class="arch-node arch-node-agent">
+              <div class="arch-node-label">player_agent</div>
+              <div class="arch-node-tools">tools</div>
+              <svg width="24" height="16" viewBox="0 0 24 16" style="position: absolute; bottom: -8px; right: -12px;">
+                <path d="M2,8 Q12,16 22,8 Q12,0 2,8" fill="none" stroke="#ec4899" stroke-width="1.5" stroke-dasharray="2,2"/>
+                <circle r="2" fill="#ec4899">
+                  <animateMotion dur="2.6s" repeatCount="indefinite" path="M2,8 Q12,16 22,8"/>
+                </circle>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Arrow + Label Section -->
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 24px;">
+            <div style="font-family: 'Courier New', monospace; font-size: 9px; color: #06b6d4; font-style: italic; text-align: center; line-height: 1.4;">chatting tool allows<br>agents to interact</div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <span style="font-family: 'Courier New', monospace; font-size: 9px; color: #22c55e;">result of turn</span>
+              <div class="arch-arrow" style="min-width: 40px;">
+                <div class="arch-dot" style="background: #22c55e;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cards Stack -->
+          <div class="arch-cards-stack">
+            <div class="arch-card arch-card-hearts">&#9829;</div>
+            <div class="arch-card arch-card-spades" style="margin-top: -36px; margin-left: 8px;">&#9824;</div>
+            <div class="arch-card arch-card-diamonds" style="margin-top: -36px; margin-left: 16px;">&#9830;</div>
+            <div class="arch-cards-label">game state</div>
+          </div>
+
+          <!-- Arrow to End API -->
+          <div class="arch-arrow" style="min-width: 40px;">
+            <div class="arch-dot" style="background: #22c55e; animation-delay: 0.3s;"></div>
+          </div>
+
+          <!-- Arrow to End -->
+          <div class="arch-arrow" style="background: #22c55e; min-width: 40px;">
+            <div class="arch-dot" style="background: #16a34a;"></div>
+          </div>
+
+          <!-- End Node -->
+          <div class="arch-node arch-node-end">
+            <div class="arch-node-label">Termination</div>
+            <div class="arch-node-name">END</div>
+            <div class="arch-node-condition">(when agent has empty hand)</div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- What is AWS Strands -->
