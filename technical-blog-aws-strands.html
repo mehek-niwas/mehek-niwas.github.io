@@ -353,17 +353,7 @@
           }
         </style>
 
-        <div class="arch-diagram-header">
-          <span class="arch-diagram-title">SYSTEM_ARCHITECTURE.diagram</span>
-          <span class="arch-diagram-status">live data flow</span>
-        </div>
-
         <div class="arch-flow">
-
-          <!-- Arrow to Orchestrator -->
-          <div class="arch-arrow">
-            <div class="arch-dot"></div>
-          </div>
 
           <!-- Orchestrator -->
           <div class="arch-node arch-node-orchestrator">
@@ -371,53 +361,55 @@
             <div class="arch-node-name">WIN A<br>GAME OF BS</div>
           </div>
 
-          <!-- Arrows to Agents -->
-          <div class="arch-vertical-arrows">
-            <div class="arch-h-arrow">
-              <span style="font-family: 'Courier New', monospace; font-size: 8px; color: #888;">system_prompt</span>
-              <div class="arch-h-arrow-line"><div class="arch-dot"></div></div>
+          <!-- Agents Group with individual arrows -->
+          <div class="arch-agents-group" style="margin-top: 0;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <div class="arch-h-arrow">
+                <span style="font-family: 'Courier New', monospace; font-size: 8px; color: #888;">system_prompt</span>
+                <div class="arch-h-arrow-line"><div class="arch-dot"></div></div>
+              </div>
+              <div class="arch-node arch-node-agent">
+                <div class="arch-node-label">player_agent</div>
+                <div class="arch-node-tools">tools</div>
+                <svg width="24" height="16" viewBox="0 0 24 16" style="position: absolute; bottom: -8px; right: -12px;">
+                  <path d="M2,8 Q12,16 22,8 Q12,0 2,8" fill="none" stroke="#ec4899" stroke-width="1.5" stroke-dasharray="2,2"/>
+                  <circle r="2" fill="#ec4899">
+                    <animateMotion dur="2s" repeatCount="indefinite" path="M2,8 Q12,16 22,8"/>
+                  </circle>
+                </svg>
+              </div>
             </div>
-            <div class="arch-h-arrow">
-              <span style="font-family: 'Courier New', monospace; font-size: 8px; color: #888;">system_prompt</span>
-              <div class="arch-h-arrow-line"><div class="arch-dot" style="animation-delay: 0.5s;"></div></div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <div class="arch-h-arrow">
+                <span style="font-family: 'Courier New', monospace; font-size: 8px; color: #888;">system_prompt</span>
+                <div class="arch-h-arrow-line"><div class="arch-dot" style="animation-delay: 0.5s;"></div></div>
+              </div>
+              <div class="arch-node arch-node-agent">
+                <div class="arch-node-label">player_agent</div>
+                <div class="arch-node-tools">tools</div>
+                <svg width="24" height="16" viewBox="0 0 24 16" style="position: absolute; bottom: -8px; right: -12px;">
+                  <path d="M2,8 Q12,16 22,8 Q12,0 2,8" fill="none" stroke="#ec4899" stroke-width="1.5" stroke-dasharray="2,2"/>
+                  <circle r="2" fill="#ec4899">
+                    <animateMotion dur="2.3s" repeatCount="indefinite" path="M2,8 Q12,16 22,8"/>
+                  </circle>
+                </svg>
+              </div>
             </div>
-            <div class="arch-h-arrow">
-              <span style="font-family: 'Courier New', monospace; font-size: 8px; color: #888;">system_prompt</span>
-              <div class="arch-h-arrow-line"><div class="arch-dot" style="animation-delay: 1s;"></div></div>
-            </div>
-          </div>
-
-          <!-- Agents Group -->
-          <div class="arch-agents-group" style="margin-top: 20px;">
-            <div class="arch-node arch-node-agent">
-              <div class="arch-node-label">player_agent</div>
-              <div class="arch-node-tools">tools</div>
-              <svg width="24" height="16" viewBox="0 0 24 16" style="position: absolute; bottom: -8px; right: -12px;">
-                <path d="M2,8 Q12,16 22,8 Q12,0 2,8" fill="none" stroke="#ec4899" stroke-width="1.5" stroke-dasharray="2,2"/>
-                <circle r="2" fill="#ec4899">
-                  <animateMotion dur="2s" repeatCount="indefinite" path="M2,8 Q12,16 22,8"/>
-                </circle>
-              </svg>
-            </div>
-            <div class="arch-node arch-node-agent">
-              <div class="arch-node-label">player_agent</div>
-              <div class="arch-node-tools">tools</div>
-              <svg width="24" height="16" viewBox="0 0 24 16" style="position: absolute; bottom: -8px; right: -12px;">
-                <path d="M2,8 Q12,16 22,8 Q12,0 2,8" fill="none" stroke="#ec4899" stroke-width="1.5" stroke-dasharray="2,2"/>
-                <circle r="2" fill="#ec4899">
-                  <animateMotion dur="2.3s" repeatCount="indefinite" path="M2,8 Q12,16 22,8"/>
-                </circle>
-              </svg>
-            </div>
-            <div class="arch-node arch-node-agent">
-              <div class="arch-node-label">player_agent</div>
-              <div class="arch-node-tools">tools</div>
-              <svg width="24" height="16" viewBox="0 0 24 16" style="position: absolute; bottom: -8px; right: -12px;">
-                <path d="M2,8 Q12,16 22,8 Q12,0 2,8" fill="none" stroke="#ec4899" stroke-width="1.5" stroke-dasharray="2,2"/>
-                <circle r="2" fill="#ec4899">
-                  <animateMotion dur="2.6s" repeatCount="indefinite" path="M2,8 Q12,16 22,8"/>
-                </circle>
-              </svg>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <div class="arch-h-arrow">
+                <span style="font-family: 'Courier New', monospace; font-size: 8px; color: #888;">system_prompt</span>
+                <div class="arch-h-arrow-line"><div class="arch-dot" style="animation-delay: 1s;"></div></div>
+              </div>
+              <div class="arch-node arch-node-agent">
+                <div class="arch-node-label">player_agent</div>
+                <div class="arch-node-tools">tools</div>
+                <svg width="24" height="16" viewBox="0 0 24 16" style="position: absolute; bottom: -8px; right: -12px;">
+                  <path d="M2,8 Q12,16 22,8 Q12,0 2,8" fill="none" stroke="#ec4899" stroke-width="1.5" stroke-dasharray="2,2"/>
+                  <circle r="2" fill="#ec4899">
+                    <animateMotion dur="2.6s" repeatCount="indefinite" path="M2,8 Q12,16 22,8"/>
+                  </circle>
+                </svg>
+              </div>
             </div>
           </div>
 
@@ -443,11 +435,6 @@
           <!-- Arrow to End API -->
           <div class="arch-arrow" style="min-width: 40px;">
             <div class="arch-dot" style="background: #22c55e; animation-delay: 0.3s;"></div>
-          </div>
-
-          <!-- Arrow to End -->
-          <div class="arch-arrow" style="background: #22c55e; min-width: 40px;">
-            <div class="arch-dot" style="background: #16a34a;"></div>
           </div>
 
           <!-- End Node -->
