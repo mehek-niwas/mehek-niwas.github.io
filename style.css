@@ -665,6 +665,107 @@ u.clicked {
   color: #000;
 }
 
+/* Projects page layout */
+.projects-main {
+  display: block;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px 24px 48px;
+}
+
+.projects-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.project-row {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: 20px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 14px 0 20px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.14);
+  transition: transform 0.18s ease;
+}
+
+.project-row:hover {
+  transform: translateY(-1px);
+}
+
+.project-media {
+  align-self: stretch;
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.project-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-height: 220px;
+  object-fit: cover;
+}
+
+.project-content h2 {
+  margin: 0 0 8px;
+  font-family: 'VT323', monospace;
+  font-size: 30px;
+  line-height: 1;
+  font-weight: normal;
+}
+
+.project-description {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.2;
+}
+
+.project-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.project-links a {
+  display: inline-block;
+  text-decoration: none;
+  color: #000;
+  background: #ffc0da;
+  border-radius: 7px;
+  padding: 5px 10px;
+  font-size: 17px;
+  transition: background-color 0.18s ease;
+}
+
+.project-links a:hover {
+  background: hotpink;
+}
+
+.project-link-placeholder {
+  opacity: 0.85;
+}
+
+.project-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 12px;
+  font-size: 16px;
+}
+
+.project-meta span {
+  background: rgba(255, 192, 218, 0.2);
+  padding: 2px 8px;
+  border-radius: 7px;
+}
+
 /* Mobile Responsive Styles */
 @media (max-width: 900px) {
   /* Stack main layout vertically on mobile */
@@ -871,6 +972,26 @@ u.clicked {
 
   .text p {
     font-size: 18px;
+  }
+
+  .projects-main {
+    padding: 18px 12px 38px;
+  }
+
+  .project-row {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    padding: 14px 0 18px;
+  }
+
+  .project-content h2 {
+    font-size: 26px;
+  }
+
+  .project-description,
+  .project-links a,
+  .project-meta {
+    font-size: 16px;
   }
 
   /* Adjust scroll-to-top button for mobile */
