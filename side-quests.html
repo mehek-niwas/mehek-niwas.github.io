@@ -36,18 +36,146 @@
 <header>
   <div class="name-wrapper">
     <img src="assets/star.webp" class="star left" />
-    <h1>mehek niwas</h1>
+    <h1>side quests</h1>
     <img src="assets/wink_star.webp" class="winkstar right" />
   </div>
 </header>
 
   <!-- Main content -->
-  <main>
-    <div class="text" style="grid-column: 1 / -1; text-align: center; padding: 60px 20px;">
-      <h2>side quests</h2>
-      <p style="font-size: 24px; margin-top: 30px;">under construction 🚧</p>
-      <p style="font-size: 20px; margin-top: 20px;">coming soon!</p>
-      <img src="assets/tiny_kirby_magic.gif" alt="Kirby dancing" style="width:80px; height:auto; margin-top: 30px;">
+  <main class="side-quests-main">
+    <section class="side-quests-section">
+      <!-- <h2>side quests</h2> -->
+      <p class="side-quests-subtitle"></p>
+
+      <!--
+        Add a new quest by copying one of these cards into .side-quests-feed.
+
+        Image or GIF card:
+        <article class="quest-card">
+          <div class="quest-media">
+            <img src="assets/touch/your-file.gif" alt="Short alt text for the media" loading="lazy">
+          </div>
+          <div class="quest-content">
+            <h3>Quest title</h3>
+            <p>Your short description goes here.</p>
+            <p class="quest-meta">Location • optional details</p>
+          </div>
+        </article>
+
+        YouTube card:
+        <article class="quest-card">
+          <div class="quest-media quest-media-embed quest-media-video">
+            <iframe
+              src="https://www.youtube.com/embed/VIDEO_ID"
+              title="YouTube video player"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen>
+            </iframe>
+          </div>
+          <div class="quest-content">
+            <h3>Quest title</h3>
+            <p>Short context for the video.</p>
+          </div>
+        </article>
+
+        Google Slides card:
+        <article class="quest-card">
+          <div class="quest-media quest-media-embed quest-media-slides">
+            <iframe
+              src="https://docs.google.com/presentation/d/e/SLIDES_ID/embed?start=false&loop=false&delayms=3000"
+              title="Google Slides"
+              loading="lazy"
+              allowfullscreen>
+            </iframe>
+          </div>
+          <div class="quest-content">
+            <h3>Quest title</h3>
+            <p>Short context for the slides.</p>
+          </div>
+        </article>
+      -->
+      <div class="side-quests-feed">
+        <article class="quest-card">
+          <div class="quest-media">
+            <img src="assets/touch/scuba_diving.gif" alt="Scuba diving and snorkeling in Key Largo waters" loading="lazy">
+          </div>
+          <div class="quest-content">
+            <h3>snorkeling in key largo</h3>
+            <p>i was trying to get a better video of the jewel damselfish</p>
+            <p class="quest-meta">Florida • reef day</p>
+          </div>
+        </article>
+
+        <article class="quest-card">
+          <div class="quest-media quest-media-embed quest-media-video">
+            <iframe
+              src="https://www.youtube.com/embed/WvecDle6JdY"
+              title="chaotic fish video while scuba diving in Key Largo"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen>
+            </iframe>
+          </div>
+          <div class="quest-content">
+            <h3>chaotic fishies cam</h3>
+            <p>video i took during a key largo scuba drift dive</p>
+            <p class="quest-meta">Video • key largo</p>
+          </div>
+        </article>
+
+        <article class="quest-card">
+          <div class="quest-media">
+            <img src="assets/touch/mt_layfette.jpeg" alt="mt lafayette" loading="lazy">
+          </div>
+          <div class="quest-content">
+            <h3>mt layfette summit day</h3>
+            <p>following the franconia ridge trail</p>
+            <p class="quest-meta">New Hampshire • 9 mile hike</p>
+          </div>
+        </article>
+
+        <article class="quest-card">
+          <div class="quest-media">
+            <img src="assets/touch/totem_pole_jasper.jpeg" alt="totem pole" loading="lazy">
+          </div>
+          <div class="quest-content">
+            <h3>totem pole!</h3>
+            <p>went to jasper in canada with my dad</p>
+            <p class="quest-meta">Jasper</p>
+          </div>
+        </article>
+
+        <article class="quest-card">
+          <div class="quest-media">
+            <img src="assets/touch/mailbox_mehek.jpeg" alt="Snowy view on Mt Lafayette while hiking Franconia trail" loading="lazy">
+          </div>
+          <div class="quest-content">
+            <h3>mailbox peak</h3>
+            <p>me at the top (it was raining for 4 hrs) </p>
+            <p class="quest-meta">Seattle • 7 mile hike</p>
+          </div>
+        </article>
+
+        <article class="quest-card">
+          <div class="quest-media quest-media-embed quest-media-slides">
+            <iframe
+              src="https://docs.google.com/presentation/d/e/2PACX-1vQK9i9lxpyvk3zXuDzuXbEkKJjbRAM29svwzlH5bX1SgP-45xDhpm9VMJmrwh31Mn3_8Umvf3OPFR68/pubembed?start=false&loop=true&delayms=3000"
+              title="Google Slides"
+              loading="lazy"
+              allowfullscreen>
+            </iframe>
+          </div>
+          <div class="quest-content">
+            <h3>fish log of what i've seen on my dives</h3>
+            <p>names, reference pictures, and my own pictures</p>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <div class="side-quests-map">
       <script type="text/javascript" id="mapmyvisitors" src="https://mapmyvisitors.com/map.js?cl=f1e2f2&w=220&t=tt&d=FCQWT3SLLFvjINeaPkqm42rmkvVeoYgH-ftUQtrQV60&co=821169&ct=ffffff&cmo=0500ff&cmn=009100"></script>
     </div>
   </main>

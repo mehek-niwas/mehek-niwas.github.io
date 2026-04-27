@@ -842,6 +842,113 @@ u.clicked {
   border-radius: 7px;
 }
 
+/* Side quests Pinterest feed */
+.side-quests-main {
+  display: block;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 20px 24px 48px;
+}
+
+.side-quests-section h2 {
+  margin: 0;
+  font-family: 'VT323', monospace;
+  font-size: 38px;
+  font-weight: normal;
+}
+
+.side-quests-subtitle {
+  margin: 8px 0 22px;
+  font-size: 22px;
+  opacity: 0.8;
+}
+
+.side-quests-feed {
+  column-count: 3;
+  column-gap: 20px;
+}
+
+.quest-card {
+  display: inline-block;
+  width: 100%;
+  margin: 0 0 18px;
+  break-inside: avoid;
+  border: none;
+  border-radius: 16px;
+  background: transparent;
+  box-shadow: none;
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.quest-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.quest-media {
+  width: 100%;
+  background: transparent;
+}
+
+.quest-media img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.quest-media-embed {
+  position: relative;
+}
+
+.quest-media-embed iframe {
+  display: block;
+  width: 100%;
+  border: 0;
+}
+
+.quest-media-video iframe {
+  aspect-ratio: 16 / 9;
+}
+
+.quest-media-slides iframe {
+  aspect-ratio: 16 / 10;
+}
+
+.quest-content {
+  padding: 16px 18px 18px;
+}
+
+.quest-content h3 {
+  margin: 0 0 8px;
+  font-family: 'VT323', monospace;
+  font-size: 24px;
+  font-weight: normal;
+  line-height: 1.15;
+}
+
+.quest-content p {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #333;
+}
+
+.quest-meta {
+  margin-top: 10px !important;
+  font-family: 'VT323', monospace !important;
+  font-size: 16px !important;
+  opacity: 0.65;
+  color: #666;
+}
+
+.side-quests-map {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+}
+
 /* Mobile Responsive Styles */
 @media (max-width: 900px) {
   /* Stack main layout vertically on mobile */
@@ -1068,6 +1175,37 @@ u.clicked {
   .project-links a,
   .project-meta {
     font-size: 16px;
+  }
+
+  .side-quests-main {
+    padding: 18px 15px 36px;
+  }
+
+  .side-quests-section h2 {
+    font-size: 34px;
+  }
+
+  .side-quests-subtitle {
+    font-size: 20px;
+    margin-bottom: 18px;
+  }
+
+  .side-quests-feed {
+    column-count: 2;
+    column-gap: 16px;
+  }
+
+  .quest-content h3 {
+    font-size: 22px;
+  }
+
+  .quest-content p {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .quest-meta {
+    font-size: 16px !important;
   }
 
   /* Adjust scroll-to-top button for mobile */
@@ -1386,6 +1524,40 @@ u.clicked {
   .blog-article-main table th,
   .blog-article-main table td {
     padding: 6px;
+  }
+
+  .side-quests-main {
+    padding: 16px 12px 30px;
+  }
+
+  .side-quests-section h2 {
+    font-size: 30px;
+  }
+
+  .side-quests-subtitle {
+    font-size: 18px;
+  }
+
+  .side-quests-feed {
+    column-count: 1;
+    column-gap: 0;
+  }
+
+  .quest-content {
+    padding: 14px 16px 16px;
+  }
+
+  .quest-content h3 {
+    font-size: 20px;
+  }
+
+  .quest-content p {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .quest-meta {
+    font-size: 15px !important;
   }
 }
 
