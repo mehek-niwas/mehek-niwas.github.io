@@ -741,11 +741,87 @@ u.clicked {
   border-radius: 7px;
   padding: 5px 10px;
   font-size: 17px;
-  transition: background-color 0.18s ease;
+  transition: background-color 0.18s ease, transform 0.2s ease;
+  position: relative;
+  overflow: visible;
 }
 
 .project-links a:hover {
   background: hotpink;
+  transform: translateY(-1px);
+}
+
+.project-links a::before,
+.project-links a::after {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: white;
+  opacity: 0;
+  pointer-events: none;
+  clip-path: polygon(
+    50% 0%,
+    61% 35%,
+    98% 35%,
+    68% 57%,
+    79% 91%,
+    50% 70%,
+    21% 91%,
+    32% 57%,
+    2% 35%,
+    39% 35%
+  );
+}
+
+.project-links a::before {
+  top: -6px;
+  right: -6px;
+}
+
+.project-links a::after {
+  top: -8px;
+  left: -4px;
+  width: 6px;
+  height: 6px;
+}
+
+.project-links a:hover::before {
+  animation: sparkle-1 0.6s ease-out forwards;
+}
+
+.project-links a:hover::after {
+  animation: sparkle-2 0.6s ease-out 0.1s forwards;
+}
+
+@keyframes sparkle-1 {
+  0% {
+    opacity: 0;
+    transform: scale(0) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.4) rotate(180deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.4) rotate(360deg) translate(8px, -8px);
+  }
+}
+
+@keyframes sparkle-2 {
+  0% {
+    opacity: 0;
+    transform: scale(0) rotate(0deg);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.2) rotate(200deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.3) rotate(400deg) translate(-6px, -6px);
+  }
 }
 
 .project-link-placeholder {
