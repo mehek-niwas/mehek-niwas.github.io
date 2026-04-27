@@ -3,11 +3,6 @@
   const container = document.getElementById('blog-nav-container');
   if (!container) return;
 
-  // On article pages (e.g. technical-blog-rag.html), category/series links point to technical-blog.html
-  const isArticlePage = /technical-blog-rag|technical-blog\/[^/]+\.html/.test(window.location.pathname) ||
-    window.location.pathname.endsWith('technical-blog-rag.html');
-  const base = isArticlePage ? 'technical-blog.html' : '';
-
   fetch('blog-nav.html')
     .then(function (res) { return res.text(); })
     .then(function (html) {
