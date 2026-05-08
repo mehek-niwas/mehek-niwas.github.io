@@ -849,6 +849,46 @@ u.clicked {
   border-radius: 7px;
 }
 
+/* Algos page */
+.algos-main {
+  display: block;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 20px 24px 48px;
+}
+
+.algos-section {
+  margin-top: 22px;
+}
+
+.algos-section h2 {
+  margin: 0 0 10px;
+  font-family: 'VT323', monospace;
+  font-size: 34px;
+  font-weight: normal;
+}
+
+.algos-list {
+  margin: 0;
+  padding-left: 28px;
+  font-size: 21px;
+  line-height: 1.35;
+}
+
+.algos-list li {
+  margin: 4px 0;
+}
+
+.algos-list a {
+  color: #000;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.18);
+}
+
+.algos-list a:hover {
+  background: #ffc0da;
+}
+
 /* Side quests Pinterest feed */
 .side-quests-main {
   display: block;
@@ -1188,6 +1228,19 @@ u.clicked {
   .project-links a,
   .project-meta {
     font-size: 16px;
+  }
+
+  .algos-main {
+    padding: 18px 12px 38px;
+  }
+
+  .algos-section h2 {
+    font-size: 30px;
+  }
+
+  .algos-list {
+    font-size: 19px;
+    padding-left: 24px;
   }
 
   .side-quests-main {
@@ -1719,5 +1772,14 @@ u.clicked {
 
   nav {
     gap: 8px;
+  }
+
+  .algos-section h2 {
+    font-size: 26px;
+  }
+
+  .algos-list {
+    font-size: 17px;
+    line-height: 1.4;
   }
 }
