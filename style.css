@@ -889,6 +889,18 @@ u.clicked {
   background: #ffc0da;
 }
 
+.algos-highlight {
+  margin-top: 8px;
+  border: 2px solid hotpink;
+  border-radius: 10px;
+  background: rgba(255, 192, 218, 0.32);
+  padding: 10px 14px 14px;
+}
+
+.algos-highlight h2 {
+  margin-bottom: 6px;
+}
+
 /* Side quests Pinterest feed */
 .side-quests-main {
   display: block;
