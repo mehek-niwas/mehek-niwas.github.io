@@ -37,10 +37,58 @@
       flex-wrap: wrap;
     }
 
+    .tomato-guy-wrapper {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .pomodoro-mode-badge {
+      font-family: 'VT323', monospace;
+      font-size: 22px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      opacity: 0.7;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .pomodoro-mode-badge.mode-work { color: #000; }
+    .pomodoro-mode-badge.mode-short { color: hotpink; }
+    .pomodoro-mode-badge.mode-long { color: #4caf50; }
+
+    .pomodoro-timer-column {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+    }
+
+    .pomodoro-status-message {
+      font-family: 'VT323', monospace;
+      font-size: 24px;
+      text-align: center;
+      min-height: 32px;
+      color: #000;
+      opacity: 0.85;
+      max-width: 500px;
+      line-height: 1.3;
+    }
+
+    .pomodoro-status-message.is-highlight {
+      color: rgb(233, 10, 99);
+      font-size: 26px;
+      opacity: 1;
+    }
+
     .tomato-guy {
       width: 320px;
       height: 320px;
       object-fit: contain;
+    }
+
+    .tomato-guy.floating {
       animation: bounce 2s ease-in-out infinite;
     }
 
@@ -500,8 +548,9 @@
         height: 200px;
       }
 
-      .pomodoro-header-text {
-        font-size: 36px;
+      .pomodoro-status-message {
+        font-size: 20px;
+        padding: 0 16px;
       }
 
       .tomato-icon {
@@ -525,19 +574,24 @@
 </script>
 
 <body>
-  <!-- <header>
+  <header>
     <div class="name-wrapper">
       <img src="assets/star.webp" class="star left" alt="" />
       <h1>pomodoro</h1>
       <img src="assets/wink_star.webp" class="winkstar right" alt="" />
     </div>
-  </header> -->
+  </header>
 
   <main class="pomodoro-main">
     <div class="pomodoro-center-section">
       <div class="pomodoro-timer-section">
-        <img src="assets/tomato-guy/tomato-guy.png" alt="Tomato Guy" class="tomato-guy" />
-        <div class="pomodoro-time-display" id="timeDisplay">25:00</div>
+        <div class="tomato-guy-wrapper">
+          <img src="assets/tomato-guy/tomato-guy.png" alt="Tomato Guy" class="tomato-guy" />
+        </div>
+        <div class="pomodoro-timer-column">
+          <div class="pomodoro-mode-badge mode-work" id="modeBadge">🍅 focus</div>
+          <div class="pomodoro-time-display" id="timeDisplay">25:00</div>
+        </div>
       </div>
 
       <div class="pomodoro-controls">
@@ -545,6 +599,8 @@
         <button type="button" class="pomodoro-btn" id="pauseBtn" style="display: none;">pause</button>
         <button type="button" class="pomodoro-btn" id="endBtn" style="display: none;">end</button>
       </div>
+
+      <div class="pomodoro-status-message" id="statusMessage"></div>
 
       <div class="pomodoro-tomato-progress" id="tomatoProgress">
         <img src="assets/tomato-guy/tomato-guy.png" class="tomato-icon" alt="" />
@@ -628,6 +684,9 @@
 
     // DOM elements --> make it so that javascript can read your html elements
     const timeDisplay = document.getElementById('timeDisplay');
+    const tomatoGuy = document.querySelector('.tomato-guy');
+    const modeBadge = document.getElementById('modeBadge');
+    const statusMessage = document.getElementById('statusMessage');
     const startBtn = document.getElementById('startBtn');
     const pauseBtn = document.getElementById('pauseBtn');
     const endBtn = document.getElementById('endBtn');
@@ -665,6 +724,68 @@
     let pauseLog = [];
     let tasks = [];
     let taskIdCounter = 0;
+    let statusMessageTimeout = null;
+
+    const MODE_BADGE_LABELS = {
+      work: '🍅 focus',
+      short: '☕ short break',
+      long: '🌴 long break',
+    };
+
+    function tomatoesLeftUntilLongBreak() {
+      const inCycle = completedPomodoros % TOMATOES_FOR_LONG_BREAK;
+      if (inCycle === 0 && completedPomodoros > 0) return 0;
+      return TOMATOES_FOR_LONG_BREAK - inCycle;
+    }
+
+    function showStatusMessage(text, { highlight = false, autoRevert = true, duration = 5000 } = {}) {
+      statusMessage.textContent = text;
+      statusMessage.classList.toggle('is-highlight', highlight);
+      clearTimeout(statusMessageTimeout);
+      if (autoRevert && duration > 0) {
+        statusMessageTimeout = setTimeout(updateStatusHint, duration);
+      }
+    }
+
+    function updateStatusHint() {
+      statusMessage.classList.remove('is-highlight');
+      const left = tomatoesLeftUntilLongBreak();
+
+      if (currentMode === 'work') {
+        if (!hasStarted) {
+          statusMessage.textContent = 'its tomato time! click start';
+          statusMessage.classList.add('is-highlight');
+        } else if (isRunning) {
+          if (left === 0) {
+            statusMessage.textContent = 'next tomato = long break!';
+          } else {
+            statusMessage.textContent = `${left} tomato${left === 1 ? '' : 'es'} until long break`;
+          }
+        } else if (left === 0) {
+          statusMessage.textContent = 'next tomato = long break!';
+        } else {
+          statusMessage.textContent = `${left} tomato${left === 1 ? '' : 'es'} until long break`;
+        }
+      } else if (currentMode === 'short') {
+        statusMessage.textContent = isRunning
+          ? 'short break in progress ☕'
+          : 'enjoy your short break ☕ click start when ready';
+      } else {
+        statusMessage.textContent = isRunning
+          ? 'long break in progress 🌴'
+          : 'enjoy your long break 🌴 click start when ready';
+      }
+    }
+
+    function updateModeBadge() {
+      modeBadge.textContent = MODE_BADGE_LABELS[currentMode];
+      modeBadge.className = `pomodoro-mode-badge mode-${currentMode === 'work' ? 'work' : currentMode === 'short' ? 'short' : 'long'}`;
+    }
+
+    function updateModeUI() {
+      updateModeBadge();
+      updateStatusHint();
+    }
 
     function formatTime(seconds) {
       const m = Math.floor(seconds / 60);
@@ -681,12 +802,17 @@
       return `${s}s`;
     }
 
+    function updateTomatoGuy() {
+      tomatoGuy.classList.toggle('floating', isRunning && currentMode === 'work');
+    }
+
     function updateDisplay() {
       timeDisplay.textContent = formatTime(remainingSeconds);
       document.title = isRunning
-        ? `${formatTime(remainingSeconds)} · tomato time`
+        ? `${formatTime(remainingSeconds)} · ${MODES[currentMode].label}`
         : documentTitle;
       updateTomatoProgress();
+      updateTomatoGuy();
     }
 
     function updateTomatoProgress() {
@@ -717,6 +843,7 @@
       totalSeconds = MODES[mode].seconds;
       remainingSeconds = totalSeconds;
       updateDisplay();
+      updateModeUI();
     }
 
     function updateButtonVisibility() {
@@ -782,14 +909,28 @@
         if (currentMode === 'work') {
           completedPomodoros += 1;
           celebrateTomato();
-          pauseTimer();
-          
-          // Auto-switch to break
+
           const nextMode = completedPomodoros % TOMATOES_FOR_LONG_BREAK === 0 ? 'long' : 'short';
+          pauseTimer();
           setMode(nextMode);
+
+          if (nextMode === 'long') {
+            showStatusMessage('tomato complete! you earned a long break!', { highlight: true, autoRevert: false });
+          } else {
+            const left = tomatoesLeftUntilLongBreak();
+            showStatusMessage(
+              `tomato complete! short break starting... ${left} tomato${left === 1 ? '' : 'es'} until long break`,
+              { highlight: true, autoRevert: false }
+            );
+          }
+        } else if (currentMode === 'short') {
+          pauseTimer();
+          setMode('work');
+          showStatusMessage('short break over! back to tomato time', { highlight: true });
         } else {
           pauseTimer();
           setMode('work');
+          showStatusMessage('long break over! back to tomato time', { highlight: true });
         }
         return;
       }
@@ -814,6 +955,8 @@
       timerId = window.setInterval(tick, 1000);
       updateDisplay();
       updateButtonVisibility();
+      clearTimeout(statusMessageTimeout);
+      updateStatusHint();
     }
 
     function pauseTimer() {
@@ -837,6 +980,8 @@
       }
 
       updateButtonVisibility();
+      updateTomatoGuy();
+      updateStatusHint();
     }
 
     function resetSession() {
@@ -861,6 +1006,8 @@
       updateTomatoProgress();
       document.title = documentTitle;
       updateButtonVisibility();
+      clearTimeout(statusMessageTimeout);
+      updateModeUI();
     }
 
     function endSession() {
@@ -879,7 +1026,7 @@
       
       const totalElapsed = sessionStartTime ? Math.floor((Date.now() - sessionStartTime) / 1000) : 0;
       
-      let html = '<div class="receipt-section"><h3>📊 session stats</h3>';
+      let html = '<div class="receipt-section"><h3>session stats</h3>';
       html += `<div class="receipt-stat"><span>completed tomatoes:</span><span>${completedPomodoros} 🍅</span></div>`;
       html += `<div class="receipt-stat"><span>total focus time:</span><span>${formatDuration(totalFocusTime)}</span></div>`;
       html += `<div class="receipt-stat"><span>total elapsed time:</span><span>${formatDuration(totalElapsed)}</span></div>`;
@@ -887,7 +1034,7 @@
       html += '</div>';
 
       if (pauseLog.length > 0) {
-        html += '<div class="receipt-section"><h3>⏸️ pause log</h3>';
+        html += '<div class="receipt-section"><h3>pause log</h3>';
         pauseLog.forEach((pause, i) => {
           html += `<div class="receipt-stat"><span>pause ${i + 1} at ${pause.time}:</span><span>${formatDuration(pause.duration)}</span></div>`;
         });
@@ -1069,6 +1216,7 @@
     setMode('work');
     updateTomatoProgress();
     updateButtonVisibility();
+    updateModeUI();
   </script>
 </body>
 </html>
