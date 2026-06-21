@@ -33,7 +33,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 48px;
+      gap: 0px;
       flex-wrap: wrap;
     }
 
@@ -370,6 +370,126 @@
       text-decoration: underline;
     }
 
+    .secret-tomato-trigger {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      opacity: 0.3;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      padding: 0;
+    }
+
+    .secret-tomato-trigger:hover {
+      opacity: 1;
+      transform: rotate(15deg) scale(1.1);
+    }
+
+    .secret-tomato-trigger img {
+      width: 100%;
+      height: 100%;
+    }
+
+    .settings-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 10000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .settings-modal.is-visible {
+      display: flex;
+    }
+
+    .settings-panel {
+      background: #fff;
+      border: 4px solid hotpink;
+      border-radius: 12px;
+      padding: 32px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .settings-header {
+      text-align: center;
+      margin-bottom: 24px;
+      border-bottom: 3px dashed hotpink;
+      padding-bottom: 16px;
+    }
+
+    .settings-header h2 {
+      font-family: 'VT323', monospace;
+      font-size: 38px;
+      margin: 0;
+    }
+
+    .settings-form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .settings-field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .settings-field label {
+      font-family: 'VT323', monospace;
+      font-size: 22px;
+      color: #000;
+    }
+
+    .settings-field input {
+      padding: 10px 14px;
+      font-family: 'Roboto', sans-serif;
+      font-size: 18px;
+      border: 2px solid #ffc0da;
+      background: #fff;
+      outline: none;
+      border-radius: 4px;
+    }
+
+    .settings-field input:focus {
+      border-color: hotpink;
+    }
+
+    .settings-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+      justify-content: center;
+    }
+
+    .settings-btn {
+      background: hotpink;
+      border: none;
+      padding: 12px 24px;
+      font-family: 'VT323', monospace;
+      font-size: 22px;
+      cursor: pointer;
+      color: #000;
+      min-width: 100px;
+    }
+
+    .settings-btn:hover {
+      filter: brightness(1.1);
+    }
+
+    .settings-btn-secondary {
+      background: #ffc0da;
+    }
+
     @media (max-width: 768px) {
       .pomodoro-time-display {
         font-size: 80px;
@@ -405,13 +525,13 @@
 </script>
 
 <body>
-  <header>
+  <!-- <header>
     <div class="name-wrapper">
       <img src="assets/star.webp" class="star left" alt="" />
       <h1>pomodoro</h1>
       <img src="assets/wink_star.webp" class="winkstar right" alt="" />
     </div>
-  </header>
+  </header> -->
 
   <main class="pomodoro-main">
     <div class="pomodoro-center-section">
@@ -462,14 +582,51 @@
     </div>
   </div>
 
+  <button type="button" class="secret-tomato-trigger" id="settingsTrigger" title="secret settings">
+    <img src="assets/tomato-guy/tomato-guy.png" alt="" />
+  </button>
+
+  <div class="settings-modal" id="settingsModal">
+    <div class="settings-panel">
+      <div class="settings-header">
+        <h2>🍅 secret tomato settings 🍅</h2>
+      </div>
+      <form class="settings-form" id="settingsForm">
+        <div class="settings-field">
+          <label for="focusMinutes">focus time (minutes)</label>
+          <input type="number" id="focusMinutes" min="1" max="120" value="25" />
+        </div>
+        <div class="settings-field">
+          <label for="shortBreakMinutes">short break (minutes)</label>
+          <input type="number" id="shortBreakMinutes" min="1" max="60" value="5" />
+        </div>
+        <div class="settings-field">
+          <label for="longBreakMinutes">long break (minutes)</label>
+          <input type="number" id="longBreakMinutes" min="1" max="60" value="15" />
+        </div>
+        <div class="settings-field">
+          <label for="tomatoesForLongBreak">tomatoes until long break</label>
+          <input type="number" id="tomatoesForLongBreak" min="2" max="10" value="4" />
+        </div>
+        <div class="settings-actions">
+          <button type="submit" class="settings-btn">save</button>
+          <button type="button" class="settings-btn settings-btn-secondary" id="cancelSettings">cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script>
-    const MODES = {
+    // Default timer settings (can be overridden by user settings)
+    let MODES = {
       work: { seconds: 25 * 60, label: 'focus' },
       short: { seconds: 5 * 60, label: 'short break' },
       long: { seconds: 15 * 60, label: 'long break' },
     };
+    
+    let TOMATOES_FOR_LONG_BREAK = 4;
 
-    // DOM elements
+    // DOM elements --> make it so that javascript can read your html elements
     const timeDisplay = document.getElementById('timeDisplay');
     const startBtn = document.getElementById('startBtn');
     const pauseBtn = document.getElementById('pauseBtn');
@@ -481,6 +638,14 @@
     const tomatoProgress = document.getElementById('tomatoProgress');
     const receiptModal = document.getElementById('receiptModal');
     const closeReceipt = document.getElementById('closeReceipt');
+    const settingsTrigger = document.getElementById('settingsTrigger');
+    const settingsModal = document.getElementById('settingsModal');
+    const settingsForm = document.getElementById('settingsForm');
+    const cancelSettings = document.getElementById('cancelSettings');
+    const focusMinutesInput = document.getElementById('focusMinutes');
+    const shortBreakMinutesInput = document.getElementById('shortBreakMinutes');
+    const longBreakMinutesInput = document.getElementById('longBreakMinutes');
+    const tomatoesForLongBreakInput = document.getElementById('tomatoesForLongBreak');
 
     // State
     let currentMode = 'work';
@@ -526,8 +691,23 @@
 
     function updateTomatoProgress() {
       const tomatoIcons = tomatoProgress.querySelectorAll('.tomato-icon');
-      tomatoIcons.forEach((icon, index) => {
-        icon.classList.toggle('completed', index < (completedPomodoros % 4));
+      
+      // Update the number of tomato icons based on settings
+      const currentCount = tomatoIcons.length;
+      if (currentCount !== TOMATOES_FOR_LONG_BREAK) {
+        tomatoProgress.innerHTML = '';
+        for (let i = 0; i < TOMATOES_FOR_LONG_BREAK; i++) {
+          const img = document.createElement('img');
+          img.src = 'assets/tomato-guy/tomato-guy.png';
+          img.className = 'tomato-icon';
+          img.alt = '';
+          tomatoProgress.appendChild(img);
+        }
+      }
+      
+      const icons = tomatoProgress.querySelectorAll('.tomato-icon');
+      icons.forEach((icon, index) => {
+        icon.classList.toggle('completed', index < (completedPomodoros % TOMATOES_FOR_LONG_BREAK));
       });
     }
 
@@ -544,8 +724,17 @@
         startBtn.style.display = 'none';
         pauseBtn.style.display = 'inline-block';
         endBtn.style.display = 'inline-block';
-      } else {
+      } else if (hasStarted) {
+        // paused. need to only show cotinue + end
         startBtn.style.display = 'inline-block';
+        startBtn.textContent = 'continue';
+        pauseBtn.style.display = 'none';
+        endBtn.style.display = 'inline-block';
+      }
+      else {
+        // not started yet
+        startBtn.style.display = 'inline-block';
+        startBtn.textContent = 'start';
         pauseBtn.style.display = hasStarted ? 'inline-block' : 'none';
         endBtn.style.display = hasStarted ? 'inline-block' : 'none';
       }
@@ -596,7 +785,7 @@
           pauseTimer();
           
           // Auto-switch to break
-          const nextMode = completedPomodoros % 4 === 0 ? 'long' : 'short';
+          const nextMode = completedPomodoros % TOMATOES_FOR_LONG_BREAK === 0 ? 'long' : 'short';
           setMode(nextMode);
         } else {
           pauseTimer();
@@ -650,9 +839,34 @@
       updateButtonVisibility();
     }
 
+    function resetSession() {
+      hasStarted = false;
+      isRunning = false;
+      if (timerId) {
+        window.clearInterval(timerId);
+        timerId = null;
+      }
+
+      sessionStartTime = null;
+      totalFocusTime = 0;
+      currentFocusStartTime = null;
+      pauseCount = 0;
+      pauseLog = [];
+      completedPomodoros = 0;
+      tasks = [];
+      taskIdCounter = 0;
+
+      setMode('work');
+      renderTasks();
+      updateTomatoProgress();
+      document.title = documentTitle;
+      updateButtonVisibility();
+    }
+
     function endSession() {
       if (isRunning) pauseTimer();
       generateReceipt();
+      resetSession();
       receiptModal.classList.add('is-visible');
     }
 
@@ -762,6 +976,51 @@
       });
     }
 
+    // Settings management
+    function loadSettings() {
+      try {
+        const saved = localStorage.getItem('tomatoSettings');
+        if (saved) {
+          const settings = JSON.parse(saved);
+          MODES.work.seconds = settings.focusMinutes * 60;
+          MODES.short.seconds = settings.shortBreakMinutes * 60;
+          MODES.long.seconds = settings.longBreakMinutes * 60;
+          TOMATOES_FOR_LONG_BREAK = settings.tomatoesForLongBreak;
+          
+          focusMinutesInput.value = settings.focusMinutes;
+          shortBreakMinutesInput.value = settings.shortBreakMinutes;
+          longBreakMinutesInput.value = settings.longBreakMinutes;
+          tomatoesForLongBreakInput.value = settings.tomatoesForLongBreak;
+        }
+      } catch (e) {
+        console.error('Failed to load settings', e);
+      }
+    }
+
+    function saveSettings() {
+      const settings = {
+        focusMinutes: parseInt(focusMinutesInput.value),
+        shortBreakMinutes: parseInt(shortBreakMinutesInput.value),
+        longBreakMinutes: parseInt(longBreakMinutesInput.value),
+        tomatoesForLongBreak: parseInt(tomatoesForLongBreakInput.value)
+      };
+      
+      MODES.work.seconds = settings.focusMinutes * 60;
+      MODES.short.seconds = settings.shortBreakMinutes * 60;
+      MODES.long.seconds = settings.longBreakMinutes * 60;
+      TOMATOES_FOR_LONG_BREAK = settings.tomatoesForLongBreak;
+      
+      localStorage.setItem('tomatoSettings', JSON.stringify(settings));
+      
+      // Reset current timer if not running
+      if (!isRunning && !hasStarted) {
+        setMode('work');
+        updateTomatoProgress();
+      }
+      
+      settingsModal.classList.remove('is-visible');
+    }
+
     // Event listeners
     startBtn.addEventListener('click', startTimer);
     pauseBtn.addEventListener('click', pauseTimer);
@@ -776,6 +1035,27 @@
       receiptModal.classList.remove('is-visible');
     });
 
+    settingsTrigger.addEventListener('click', () => {
+      settingsModal.classList.add('is-visible');
+    });
+
+    cancelSettings.addEventListener('click', () => {
+      settingsModal.classList.remove('is-visible');
+      loadSettings(); // Reset form to saved values
+    });
+
+    settingsForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      saveSettings();
+    });
+
+    settingsModal.addEventListener('click', (e) => {
+      if (e.target === settingsModal) {
+        settingsModal.classList.remove('is-visible');
+        loadSettings(); // Reset form to saved values
+      }
+    });
+
     if ('Notification' in window && Notification.permission === 'default') {
       const requestOnStart = () => {
         Notification.requestPermission();
@@ -785,6 +1065,7 @@
     }
 
     // Initialize
+    loadSettings();
     setMode('work');
     updateTomatoProgress();
     updateButtonVisibility();
