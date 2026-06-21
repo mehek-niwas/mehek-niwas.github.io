@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pomodoro | mehek niwas</title>
+
+  <link rel="canonical" href="https://mehek-niwas.github.io/pomodoro" />
+  <meta name="google-site-verification" content="sfQppSHf2YRlye86crIw0Kkf3EwVQxGGUvQ1bZif5K8" />
+
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/webp" href="assets/wink_star.webp">
+
+  <style>
+    .pomodoro-main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 12px 24px 64px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .pomodoro-center-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      margin: 40px 0;
+    }
+
+    .pomodoro-timer-section {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 48px;
+      flex-wrap: wrap;
+    }
+
+    .tomato-guy {
+      width: 320px;
+      height: 320px;
+      object-fit: contain;
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    .pomodoro-time-display {
+      font-family: 'VT323', monospace;
+      font-size: 120px;
+      line-height: 1;
+      letter-spacing: 4px;
+      color: #000;
+      text-align: center;
+    }
+
+    .pomodoro-controls {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .pomodoro-tomato-progress {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .tomato-icon {
+      width: 48px;
+      height: 48px;
+      opacity: 0.3;
+      transition: opacity 0.3s ease;
+    }
+
+    .tomato-icon.completed {
+      opacity: 1;
+    }
+
+    .pomodoro-btn {
+      background: #ffc0da;
+      border: none;
+      padding: 8px 20px;
+      font-family: 'VT323', monospace;
+      font-size: 20px;
+      cursor: pointer;
+      color: #000;
+      min-width: 80px;
+      transition: all 0.15s ease;
+    }
+
+    .pomodoro-btn:hover {
+      background: hotpink;
+    }
+
+    .pomodoro-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .pomodoro-btn-primary {
+      background: hotpink;
+    }
+
+    .pomodoro-btn-primary:hover {
+      background: #ff69b4;
+      filter: brightness(1.05);
+    }
+
+    .tasks-section {
+      width: 100%;
+      max-width: 700px;
+      margin: 48px 0 0;
+      padding: 24px;
+      background: rgba(255, 192, 218, 0.3);
+      border: 2px solid hotpink;
+      border-radius: 12px;
+    }
+
+    .tasks-section h2 {
+      font-family: 'VT323', monospace;
+      font-size: 36px;
+      margin: 0 0 20px;
+      text-align: center;
+    }
+
+    .task-input-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .task-input {
+      flex: 1;
+      padding: 10px 14px;
+      font-family: 'Roboto', sans-serif;
+      font-size: 16px;
+      border: 2px solid #ffc0da;
+      background: #fff;
+      outline: none;
+    }
+
+    .task-input:focus {
+      border-color: hotpink;
+    }
+
+    .task-add-btn {
+      background: hotpink;
+      border: none;
+      padding: 10px 20px;
+      font-family: 'VT323', monospace;
+      font-size: 20px;
+      cursor: pointer;
+      color: #000;
+    }
+
+    .task-add-btn:hover {
+      filter: brightness(1.1);
+    }
+
+    .task-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .task-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      margin-bottom: 8px;
+      background: #fff;
+      border: 2px solid #ffc0da;
+      border-radius: 6px;
+    }
+
+    .task-item.completed {
+      opacity: 0.6;
+    }
+
+    .task-checkbox {
+      width: 28px;
+      height: 28px;
+      cursor: pointer;
+      accent-color: hotpink;
+    }
+
+    .task-details {
+      flex: 1;
+      font-family: 'Roboto', sans-serif;
+      font-size: 16px;
+      text-align: left;
+    }
+
+    .task-details.completed {
+      text-decoration: line-through;
+    }
+
+    .task-meta {
+      font-family: 'VT323', monospace;
+      font-size: 14px;
+      color: #666;
+      margin-top: 4px;
+    }
+
+    .task-delete {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #ff6b6b;
+      padding: 4px 8px;
+      line-height: 1;
+    }
+
+    .task-delete:hover {
+      color: #ff0000;
+    }
+
+    .celebration {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .celebration-tomato {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      animation: fall 2s ease-in forwards;
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(-100px) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 10000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.is-visible {
+      display: flex;
+    }
+
+    .receipt-modal {
+      background: #fff;
+      border: 4px solid hotpink;
+      border-radius: 12px;
+      padding: 32px;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .receipt-header {
+      text-align: center;
+      margin-bottom: 24px;
+      border-bottom: 3px dashed hotpink;
+      padding-bottom: 16px;
+    }
+
+    .receipt-header h2 {
+      font-family: 'VT323', monospace;
+      font-size: 42px;
+      margin: 0 0 8px;
+    }
+
+    .receipt-date {
+      font-family: 'VT323', monospace;
+      font-size: 18px;
+      opacity: 0.7;
+    }
+
+    .receipt-section {
+      margin: 20px 0;
+      font-family: 'VT323', monospace;
+      font-size: 20px;
+    }
+
+    .receipt-section h3 {
+      font-size: 28px;
+      margin: 0 0 12px;
+      color: hotpink;
+    }
+
+    .receipt-stat {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      border-bottom: 1px dotted #ccc;
+    }
+
+    .receipt-task {
+      padding: 8px 0;
+      border-bottom: 1px dotted #ccc;
+    }
+
+    .receipt-task-name {
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    .receipt-task-meta {
+      font-size: 16px;
+      opacity: 0.7;
+      margin-left: 12px;
+    }
+
+    .receipt-footer {
+      text-align: center;
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 3px dashed hotpink;
+      font-family: 'VT323', monospace;
+      font-size: 22px;
+    }
+
+    .receipt-close {
+      margin-top: 20px;
+      background: hotpink;
+      border: none;
+      padding: 12px 32px;
+      font-family: 'VT323', monospace;
+      font-size: 24px;
+      cursor: pointer;
+      color: #000;
+    }
+
+    .receipt-close:hover {
+      filter: brightness(1.1);
+    }
+
+    .pomodoro-home {
+      display: inline-block;
+      margin-top: 32px;
+      font-family: 'VT323', monospace;
+      font-size: 18px;
+      color: #000;
+      opacity: 0.6;
+      text-decoration: none;
+      text-align: center;
+      display: block;
+    }
+
+    .pomodoro-home:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .pomodoro-time-display {
+        font-size: 80px;
+      }
+
+      .tomato-guy {
+        width: 200px;
+        height: 200px;
+      }
+
+      .pomodoro-header-text {
+        font-size: 36px;
+      }
+
+      .tomato-icon {
+        width: 36px;
+        height: 36px;
+      }
+
+      .receipt-modal {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-HWFE3QDMRV"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-HWFE3QDMRV');
+</script>
+
+<body>
+  <header>
+    <div class="name-wrapper">
+      <img src="assets/star.webp" class="star left" alt="" />
+      <h1>pomodoro</h1>
+      <img src="assets/wink_star.webp" class="winkstar right" alt="" />
+    </div>
+  </header>
+
+  <main class="pomodoro-main">
+    <div class="pomodoro-center-section">
+      <div class="pomodoro-timer-section">
+        <img src="assets/tomato-guy/tomato-guy.png" alt="Tomato Guy" class="tomato-guy" />
+        <div class="pomodoro-time-display" id="timeDisplay">25:00</div>
+      </div>
+
+      <div class="pomodoro-controls">
+        <button type="button" class="pomodoro-btn pomodoro-btn-primary" id="startBtn">start</button>
+        <button type="button" class="pomodoro-btn" id="pauseBtn" style="display: none;">pause</button>
+        <button type="button" class="pomodoro-btn" id="endBtn" style="display: none;">end</button>
+      </div>
+
+      <div class="pomodoro-tomato-progress" id="tomatoProgress">
+        <img src="assets/tomato-guy/tomato-guy.png" class="tomato-icon" alt="" />
+        <img src="assets/tomato-guy/tomato-guy.png" class="tomato-icon" alt="" />
+        <img src="assets/tomato-guy/tomato-guy.png" class="tomato-icon" alt="" />
+        <img src="assets/tomato-guy/tomato-guy.png" class="tomato-icon" alt="" />
+      </div>
+    </div>
+
+    <section class="tasks-section">
+      <h2>tasks</h2>
+      <div class="task-input-row">
+        <input type="text" class="task-input" id="taskInput" placeholder="what are you working on?" />
+        <button type="button" class="task-add-btn" id="addTaskBtn">add</button>
+      </div>
+      <ul class="task-list" id="taskList"></ul>
+    </section>
+
+    <a href="https://mehek-niwas.github.io" class="pomodoro-home">← back home</a>
+  </main>
+
+  <div class="celebration" id="celebration"></div>
+
+  <div class="modal-overlay" id="receiptModal">
+    <div class="receipt-modal">
+      <div class="receipt-header">
+        <h2>🍅 tomato summary 🍅</h2>
+        <p class="receipt-date" id="receiptDate"></p>
+      </div>
+      <div id="receiptContent"></div>
+      <div class="receipt-footer">
+        <p>great work! 🌟</p>
+        <button type="button" class="receipt-close" id="closeReceipt">close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const MODES = {
+      work: { seconds: 25 * 60, label: 'focus' },
+      short: { seconds: 5 * 60, label: 'short break' },
+      long: { seconds: 15 * 60, label: 'long break' },
+    };
+
+    // DOM elements
+    const timeDisplay = document.getElementById('timeDisplay');
+    const startBtn = document.getElementById('startBtn');
+    const pauseBtn = document.getElementById('pauseBtn');
+    const endBtn = document.getElementById('endBtn');
+    const taskInput = document.getElementById('taskInput');
+    const addTaskBtn = document.getElementById('addTaskBtn');
+    const taskList = document.getElementById('taskList');
+    const celebration = document.getElementById('celebration');
+    const tomatoProgress = document.getElementById('tomatoProgress');
+    const receiptModal = document.getElementById('receiptModal');
+    const closeReceipt = document.getElementById('closeReceipt');
+
+    // State
+    let currentMode = 'work';
+    let totalSeconds = MODES.work.seconds;
+    let remainingSeconds = totalSeconds;
+    let timerId = null;
+    let isRunning = false;
+    let hasStarted = false;
+    let completedPomodoros = 0;
+    let documentTitle = document.title;
+
+    // Session tracking
+    let sessionStartTime = null;
+    let totalFocusTime = 0;
+    let currentFocusStartTime = null;
+    let pauseCount = 0;
+    let pauseLog = [];
+    let tasks = [];
+    let taskIdCounter = 0;
+
+    function formatTime(seconds) {
+      const m = Math.floor(seconds / 60);
+      const s = seconds % 60;
+      return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    function formatDuration(seconds) {
+      const h = Math.floor(seconds / 3600);
+      const m = Math.floor((seconds % 3600) / 60);
+      const s = seconds % 60;
+      if (h > 0) return `${h}h ${m}m ${s}s`;
+      if (m > 0) return `${m}m ${s}s`;
+      return `${s}s`;
+    }
+
+    function updateDisplay() {
+      timeDisplay.textContent = formatTime(remainingSeconds);
+      document.title = isRunning
+        ? `${formatTime(remainingSeconds)} · tomato time`
+        : documentTitle;
+      updateTomatoProgress();
+    }
+
+    function updateTomatoProgress() {
+      const tomatoIcons = tomatoProgress.querySelectorAll('.tomato-icon');
+      tomatoIcons.forEach((icon, index) => {
+        icon.classList.toggle('completed', index < (completedPomodoros % 4));
+      });
+    }
+
+    function setMode(mode) {
+      if (isRunning) return;
+      currentMode = mode;
+      totalSeconds = MODES[mode].seconds;
+      remainingSeconds = totalSeconds;
+      updateDisplay();
+    }
+
+    function updateButtonVisibility() {
+      if (isRunning) {
+        startBtn.style.display = 'none';
+        pauseBtn.style.display = 'inline-block';
+        endBtn.style.display = 'inline-block';
+      } else {
+        startBtn.style.display = 'inline-block';
+        pauseBtn.style.display = hasStarted ? 'inline-block' : 'none';
+        endBtn.style.display = hasStarted ? 'inline-block' : 'none';
+      }
+    }
+
+    function playChime() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.frequency.value = 880;
+        gain.gain.setValueAtTime(0.15, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.6);
+      } catch (_) {}
+    }
+
+    function celebrateTomato() {
+      playChime();
+      
+      // Create falling tomatoes
+      for (let i = 0; i < 20; i++) {
+        setTimeout(() => {
+          const tomato = document.createElement('img');
+          tomato.src = 'assets/tomato-guy/tomato-guy.png';
+          tomato.className = 'celebration-tomato';
+          tomato.style.left = `${Math.random() * 100}%`;
+          tomato.style.animationDelay = `${Math.random() * 0.3}s`;
+          celebration.appendChild(tomato);
+          
+          setTimeout(() => tomato.remove(), 2000);
+        }, i * 100);
+      }
+
+      if (document.hidden && 'Notification' in window && Notification.permission === 'granted') {
+        new Notification('Pomodoro', { body: 'Tomato complete! 🍅' });
+      }
+    }
+
+    function tick() {
+      if (remainingSeconds <= 0) {
+        if (currentMode === 'work') {
+          completedPomodoros += 1;
+          celebrateTomato();
+          pauseTimer();
+          
+          // Auto-switch to break
+          const nextMode = completedPomodoros % 4 === 0 ? 'long' : 'short';
+          setMode(nextMode);
+        } else {
+          pauseTimer();
+          setMode('work');
+        }
+        return;
+      }
+      
+      remainingSeconds -= 1;
+      updateDisplay();
+    }
+
+    function startTimer() {
+      if (isRunning) return;
+      
+      if (!hasStarted) {
+        hasStarted = true;
+        sessionStartTime = Date.now();
+      }
+
+      if (currentMode === 'work' && !currentFocusStartTime) {
+        currentFocusStartTime = Date.now();
+      }
+
+      isRunning = true;
+      timerId = window.setInterval(tick, 1000);
+      updateDisplay();
+      updateButtonVisibility();
+    }
+
+    function pauseTimer() {
+      if (!isRunning) return;
+      
+      isRunning = false;
+      window.clearInterval(timerId);
+      timerId = null;
+      document.title = documentTitle;
+
+      if (currentMode === 'work' && currentFocusStartTime) {
+        const focusDuration = Math.floor((Date.now() - currentFocusStartTime) / 1000);
+        totalFocusTime += focusDuration;
+        currentFocusStartTime = null;
+        
+        pauseCount += 1;
+        pauseLog.push({
+          time: new Date().toLocaleTimeString(),
+          duration: focusDuration
+        });
+      }
+
+      updateButtonVisibility();
+    }
+
+    function endSession() {
+      if (isRunning) pauseTimer();
+      generateReceipt();
+      receiptModal.classList.add('is-visible');
+    }
+
+    function generateReceipt() {
+      const receiptDate = document.getElementById('receiptDate');
+      const receiptContent = document.getElementById('receiptContent');
+      
+      const now = new Date();
+      receiptDate.textContent = now.toLocaleString();
+      
+      const totalElapsed = sessionStartTime ? Math.floor((Date.now() - sessionStartTime) / 1000) : 0;
+      
+      let html = '<div class="receipt-section"><h3>📊 session stats</h3>';
+      html += `<div class="receipt-stat"><span>completed tomatoes:</span><span>${completedPomodoros} 🍅</span></div>`;
+      html += `<div class="receipt-stat"><span>total focus time:</span><span>${formatDuration(totalFocusTime)}</span></div>`;
+      html += `<div class="receipt-stat"><span>total elapsed time:</span><span>${formatDuration(totalElapsed)}</span></div>`;
+      html += `<div class="receipt-stat"><span>pause count:</span><span>${pauseCount}</span></div>`;
+      html += '</div>';
+
+      if (pauseLog.length > 0) {
+        html += '<div class="receipt-section"><h3>⏸️ pause log</h3>';
+        pauseLog.forEach((pause, i) => {
+          html += `<div class="receipt-stat"><span>pause ${i + 1} at ${pause.time}:</span><span>${formatDuration(pause.duration)}</span></div>`;
+        });
+        html += '</div>';
+      }
+
+      if (tasks.length > 0) {
+        html += '<div class="receipt-section"><h3>✓ tasks</h3>';
+        tasks.forEach(task => {
+          const status = task.completed ? '✓' : '○';
+          html += `<div class="receipt-task">`;
+          html += `<div class="receipt-task-name">${status} ${task.name}</div>`;
+          html += `<div class="receipt-task-meta">added: ${new Date(task.addedAt).toLocaleTimeString()}`;
+          if (task.completed) {
+            const focusTime = Math.floor((task.completedAt - task.addedAt) / 1000);
+            html += ` | completed: ${new Date(task.completedAt).toLocaleTimeString()} | focus time: ${formatDuration(focusTime)}`;
+          }
+          html += '</div></div>';
+        });
+        html += '</div>';
+      }
+      
+      receiptContent.innerHTML = html;
+    }
+
+    // Task management
+    function addTask() {
+      const name = taskInput.value.trim();
+      if (!name) return;
+      
+      const task = {
+        id: taskIdCounter++,
+        name,
+        addedAt: Date.now(),
+        completed: false,
+        completedAt: null
+      };
+      
+      tasks.push(task);
+      renderTasks();
+      taskInput.value = '';
+    }
+
+    function deleteTask(id) {
+      tasks = tasks.filter(t => t.id !== id);
+      renderTasks();
+    }
+
+    function toggleTask(id) {
+      const task = tasks.find(t => t.id === id);
+      if (task) {
+        task.completed = !task.completed;
+        task.completedAt = task.completed ? Date.now() : null;
+        renderTasks();
+      }
+    }
+
+    function renderTasks() {
+      taskList.innerHTML = '';
+      tasks.forEach(task => {
+        const li = document.createElement('li');
+        li.className = `task-item ${task.completed ? 'completed' : ''}`;
+        
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.className = 'task-checkbox';
+        checkbox.checked = task.completed;
+        checkbox.addEventListener('change', () => toggleTask(task.id));
+        
+        const details = document.createElement('div');
+        details.className = `task-details ${task.completed ? 'completed' : ''}`;
+        details.innerHTML = `
+          <div>${task.name}</div>
+          <div class="task-meta">added at ${new Date(task.addedAt).toLocaleTimeString()}${task.completed ? ` • completed at ${new Date(task.completedAt).toLocaleTimeString()}` : ''}</div>
+        `;
+        
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'task-delete';
+        deleteBtn.textContent = '×';
+        deleteBtn.addEventListener('click', () => deleteTask(task.id));
+        
+        li.appendChild(checkbox);
+        li.appendChild(details);
+        li.appendChild(deleteBtn);
+        taskList.appendChild(li);
+      });
+    }
+
+    // Event listeners
+    startBtn.addEventListener('click', startTimer);
+    pauseBtn.addEventListener('click', pauseTimer);
+    endBtn.addEventListener('click', endSession);
+    
+    addTaskBtn.addEventListener('click', addTask);
+    taskInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') addTask();
+    });
+
+    closeReceipt.addEventListener('click', () => {
+      receiptModal.classList.remove('is-visible');
+    });
+
+    if ('Notification' in window && Notification.permission === 'default') {
+      const requestOnStart = () => {
+        Notification.requestPermission();
+        startBtn.removeEventListener('click', requestOnStart);
+      };
+      startBtn.addEventListener('click', requestOnStart);
+    }
+
+    // Initialize
+    setMode('work');
+    updateTomatoProgress();
+    updateButtonVisibility();
+  </script>
+</body>
+</html>
