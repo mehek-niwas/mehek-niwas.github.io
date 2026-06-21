@@ -454,15 +454,6 @@
       animation-delay: 1.3s;
     }
 
-    .tasks-section.is-nudge {
-      animation: tasks-nudge 1.5s ease;
-    }
-
-    @keyframes tasks-nudge {
-      0%, 100% { border-color: hotpink; box-shadow: none; }
-      25%, 75% { border-color: #ff69b4; box-shadow: 0 0 16px rgba(255, 105, 180, 0.5); }
-    }
-
     @media (prefers-reduced-motion: reduce) {
       .intro-overlay { display: none !important; }
       body.intro-active header,
@@ -895,7 +886,6 @@
     const celebration = document.getElementById('celebration');
     const introOverlay = document.getElementById('introOverlay');
     const introStartBtn = document.getElementById('introStartBtn');
-    const tasksSection = document.querySelector('.tasks-section');
     const tomatoProgress = document.getElementById('tomatoProgress');
     const receiptModal = document.getElementById('receiptModal');
     const closeReceipt = document.getElementById('closeReceipt');
@@ -1195,19 +1185,6 @@
     function handleIntroDismiss() {
       if (!introActive) return;
       dismissIntro();
-
-      window.setTimeout(() => {
-        showStatusMessage('click start when ready!', {
-          highlight: true,
-          autoRevert: false,
-        });
-        taskInput.focus();
-        tasksSection.classList.add('is-nudge');
-        window.setTimeout(() => tasksSection.classList.remove('is-nudge'), 1500);
-        if (window.innerWidth < 768) {
-          taskInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-      }, 600);
     }
 
     function tick() {
