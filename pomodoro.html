@@ -1066,15 +1066,30 @@
     function playChime() {
       try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.frequency.value = 880;
-        gain.gain.setValueAtTime(0.15, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
-        osc.start(ctx.currentTime);
-        osc.stop(ctx.currentTime + 0.6);
+        // Whimsical bouncy melody with aggressive attack
+        const notes = [
+          { freq: 698, start: 0, duration: 0.12 },      // F5
+          { freq: 880, start: 0.08, duration: 0.12 },    // A5
+          { freq: 1047, start: 0.16, duration: 0.12 },   // C6
+          { freq: 1319, start: 0.24, duration: 0.18 },   // E6
+          { freq: 1047, start: 0.38, duration: 0.1 },    // C6
+          { freq: 1319, start: 0.46, duration: 0.25 }    // E6 (held)
+        ];
+        
+        notes.forEach(note => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.type = 'square'; // More aggressive than sine wave
+          osc.frequency.value = note.freq;
+          
+          const t = ctx.currentTime + note.start;
+          gain.gain.setValueAtTime(0.18, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + note.duration);
+          osc.start(t);
+          osc.stop(t + note.duration);
+        });
       } catch (_) {}
     }
 
