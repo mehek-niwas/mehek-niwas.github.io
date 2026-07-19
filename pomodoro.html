@@ -1208,10 +1208,12 @@
             );
           }
         } else if (currentMode === 'short') {
+          playChime();
           pauseTimer();
           setMode('work');
           showStatusMessage('short break over! back to tomato time', { highlight: true });
         } else {
+          playChime();
           pauseTimer();
           setMode('work');
           showStatusMessage('long break over! back to tomato time', { highlight: true });
