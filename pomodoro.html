@@ -161,6 +161,21 @@
       filter: brightness(1.05);
     }
 
+    .pomodoro-btn-alarm {
+      background: #ff6b6b;
+      animation: alarm-pulse 0.8s ease-in-out infinite;
+    }
+
+    .pomodoro-btn-alarm:hover {
+      background: #ff5252;
+      animation: alarm-pulse 0.5s ease-in-out infinite;
+    }
+
+    @keyframes alarm-pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
     .tasks-section {
       width: 100%;
       max-width: 700px;
@@ -775,6 +790,7 @@
         <button type="button" class="pomodoro-btn pomodoro-btn-primary" id="startBtn">start</button>
         <button type="button" class="pomodoro-btn" id="pauseBtn" style="display: none;">pause</button>
         <button type="button" class="pomodoro-btn" id="endBtn" style="display: none;">end</button>
+        <button type="button" class="pomodoro-btn pomodoro-btn-alarm" id="dismissAlarmBtn" style="display: none;">🔔 dismiss alarm</button>
       </div>
 
       <div class="pomodoro-status-message" id="statusMessage"></div>
@@ -920,6 +936,8 @@
     let statusMessageTimeout = null;
     let introRainInterval = null;
     let introActive = false;
+    let alarmInterval = null;
+    let isAlarmActive = false;
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const MODE_BADGE_LABELS = {
@@ -1093,6 +1111,40 @@
       } catch (_) {}
     }
 
+    function startAlarm() {
+      if (isAlarmActive) return;
+      isAlarmActive = true;
+      playChime();
+      alarmInterval = window.setInterval(() => {
+        playChime();
+      }, 2000); // Repeat every 2 seconds
+      showAlarmDismissButton();
+    }
+
+    function stopAlarm() {
+      if (!isAlarmActive) return;
+      isAlarmActive = false;
+      if (alarmInterval) {
+        window.clearInterval(alarmInterval);
+        alarmInterval = null;
+      }
+      hideAlarmDismissButton();
+    }
+
+    function showAlarmDismissButton() {
+      const dismissBtn = document.getElementById('dismissAlarmBtn');
+      if (dismissBtn) {
+        dismissBtn.style.display = 'inline-block';
+      }
+    }
+
+    function hideAlarmDismissButton() {
+      const dismissBtn = document.getElementById('dismissAlarmBtn');
+      if (dismissBtn) {
+        dismissBtn.style.display = 'none';
+      }
+    }
+
     function playFanfare() {
       try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -1223,15 +1275,15 @@
             );
           }
         } else if (currentMode === 'short') {
-          playChime();
+          startAlarm();
           pauseTimer();
           setMode('work');
-          showStatusMessage('short break over! back to tomato time', { highlight: true });
+          showStatusMessage('short break over! back to tomato time', { highlight: true, autoRevert: false });
         } else {
-          playChime();
+          startAlarm();
           pauseTimer();
           setMode('work');
-          showStatusMessage('long break over! back to tomato time', { highlight: true });
+          showStatusMessage('long break over! back to tomato time', { highlight: true, autoRevert: false });
         }
         return;
       }
@@ -1242,6 +1294,9 @@
 
     function startTimer() {
       if (isRunning) return;
+      
+      // Dismiss alarm if active
+      stopAlarm();
       
       if (!hasStarted) {
         hasStarted = true;
@@ -1313,6 +1368,7 @@
 
     function endSession() {
       if (isRunning) pauseTimer();
+      stopAlarm(); // Stop any active alarm
       generateReceipt();
       resetSession();
       receiptModal.classList.add('is-visible');
@@ -1474,6 +1530,9 @@
     startBtn.addEventListener('click', startTimer);
     pauseBtn.addEventListener('click', pauseTimer);
     endBtn.addEventListener('click', endSession);
+    
+    const dismissAlarmBtn = document.getElementById('dismissAlarmBtn');
+    dismissAlarmBtn.addEventListener('click', stopAlarm);
     
     addTaskBtn.addEventListener('click', addTask);
     taskInput.addEventListener('keypress', (e) => {
