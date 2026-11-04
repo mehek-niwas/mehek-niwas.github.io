@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>time tracker | mehek niwas</title>
+
+  <link rel="canonical" href="https://mehek-niwas.github.io/dashboard" />
+  <meta name="google-site-verification" content="sfQppSHf2YRlye86crIw0Kkf3EwVQxGGUvQ1bZif5K8" />
+
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="tracker.css" />
+  <link rel="icon" type="image/webp" href="assets/wink_star.webp">
+</head>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-HWFE3QDMRV"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-HWFE3QDMRV');
+</script>
+
+<body data-page="dashboard">
+  <header>
+    <div class="name-wrapper">
+      <img src="assets/star.webp" class="star left" alt="" />
+      <h1>time tracker</h1>
+      <img src="assets/wink_star.webp" class="winkstar right" alt="" />
+    </div>
+  </header>
+
+  <main class="tracker-main">
+    <div class="tracker-warning" id="configWarning" hidden></div>
+
+    <div class="tracker-userbar">
+      <span class="tracker-userbar-email" id="userEmail"></span>
+      <button type="button" class="tracker-btn" id="logoutBtn">log out</button>
+    </div>
+
+    <div class="tracker-grid">
+      <section class="tracker-card">
+        <h2>stopwatch</h2>
+        <div class="tracker-elapsed" id="elapsedDisplay">00:00:00</div>
+
+        <div class="tracker-row">
+          <span class="tracker-swatch" id="categorySwatch" aria-hidden="true"></span>
+          <div class="tracker-field">
+            <label class="tracker-label" for="categorySelect">category</label>
+            <select class="tracker-select" id="categorySelect">
+              <option value="">loading…</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="tracker-controls">
+          <button type="button" class="tracker-btn tracker-btn-primary" id="startBtn">start</button>
+          <button type="button" class="tracker-btn" id="stopBtn" disabled>stop</button>
+        </div>
+        <p class="tracker-status" id="statusMessage"></p>
+
+        <form class="tracker-new-category" id="newCategoryForm">
+          <label class="tracker-label" for="newCategoryName">+ new category</label>
+          <div class="tracker-new-category-fields">
+            <input
+              class="tracker-input"
+              type="text"
+              id="newCategoryName"
+              name="name"
+              placeholder="name"
+              maxlength="60"
+              required
+            />
+            <input class="tracker-color" type="color" id="newCategoryColor" name="color" value="#ff6b6b" aria-label="category color" />
+            <button type="submit" class="tracker-btn tracker-btn-primary" id="createCategoryBtn">add</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="tracker-card">
+        <h2>dashboard</h2>
+        <div class="tracker-range" role="tablist" aria-label="time range">
+          <button type="button" class="tracker-range-btn is-active" id="rangeWeekBtn" data-range="week">this week</button>
+          <button type="button" class="tracker-range-btn" id="rangeTodayBtn" data-range="today">today</button>
+        </div>
+        <p class="tracker-range-label" id="rangeLabel"></p>
+        <div id="dashboardBody"></div>
+      </section>
+    </div>
+
+    <a href="https://mehek-niwas.github.io" class="tracker-home">← back home</a>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabaseClient.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

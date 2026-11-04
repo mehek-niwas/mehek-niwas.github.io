@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>time tracker | mehek niwas</title>
+
+  <link rel="canonical" href="https://mehek-niwas.github.io/tracker" />
+  <meta name="google-site-verification" content="sfQppSHf2YRlye86crIw0Kkf3EwVQxGGUvQ1bZif5K8" />
+
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="tracker.css" />
+  <link rel="icon" type="image/webp" href="assets/wink_star.webp">
+</head>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-HWFE3QDMRV"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-HWFE3QDMRV');
+</script>
+
+<body data-page="login">
+  <header>
+    <div class="name-wrapper">
+      <img src="assets/star.webp" class="star left" alt="" />
+      <h1>time tracker</h1>
+      <img src="assets/wink_star.webp" class="winkstar right" alt="" />
+    </div>
+  </header>
+
+  <main class="tracker-main">
+    <div class="tracker-warning" id="configWarning" hidden></div>
+
+    <section class="tracker-card tracker-login-card">
+      <h2>sign in</h2>
+      <p>track time by category, then see how the week actually went.</p>
+      <button type="button" class="tracker-btn tracker-btn-primary tracker-btn-google" id="googleSignInBtn">
+        sign in with google
+      </button>
+      <p class="tracker-status" id="statusMessage"></p>
+    </section>
+
+    <a href="https://mehek-niwas.github.io" class="tracker-home">← back home</a>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabaseClient.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
