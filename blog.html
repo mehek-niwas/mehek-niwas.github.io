@@ -51,58 +51,49 @@
     <p class="llm-intro-sub"></p>
   </div>
 
-  <!-- LLM architecture layer layout -->
-  <div class="llm-layout">
+  <div class="blog-layout">
 
-    <div class="llm-connector"></div>
+    <!-- Vertical topic nav (collapses into a dropdown-style button on mobile) -->
+    <aside class="blog-topics" id="blog-topics">
+      <button class="blog-topics-toggle" id="blog-topics-toggle"
+              aria-expanded="false" aria-controls="blog-filters">
+        topics: <span id="blog-topics-current">all</span> <span class="blog-topics-caret">▾</span>
+      </button>
 
-    <div class="llm-layer" id="cat-interpretability">
-      <div class="layer-label">interpretability</div>
-      <div class="layer-cards">
-        <p class="layer-empty">coming soon...</p>
+      <p class="blog-topics-title">topics</p>
+
+      <div class="blog-filters" id="blog-filters" role="group" aria-label="Filter posts by topic">
+        <button class="blog-filter is-active" data-filter="all">all</button>
+        <button class="blog-filter" data-filter="interpretability">interpretability</button>
+        <button class="blog-filter" data-filter="machine learning">machine learning</button>
+        <button class="blog-filter" data-filter="agentic ai">agentic ai</button>
+        <button class="blog-filter" data-filter="notes">notes</button>
       </div>
-    </div>
+    </aside>
 
-    <div class="llm-connector"></div>
+    <div class="blog-index">
 
-    <div class="llm-layer" id="cat-ml">
-      <div class="layer-label">machine learning</div>
-      <div class="layer-cards">
-        <p class="layer-empty">coming soon...</p>
-      </div>
-    </div>
+      <!-- Posts (newest first). Copy an <article> block to add a post. -->
+      <div class="blog-post-list" id="blog-post-list">
 
-    <div class="llm-connector"></div>
-
-    <div class="llm-layer" id="cat-agentic">
-      <div class="layer-label">agentic ai</div>
-      <div class="layer-cards">
-        <article class="blog-card">
-          <header>
-            <h3>
-              <a href="blog-aws-strands.html">
-                When AIs Bluff: Building a Multi-Agent BS Card Game
-              </a>
-            </h3>
-            <p class="blog-card-meta">
-              <span>2026-04-21</span> · <span>agentic ai, aws strands, multi-agent</span>
-            </p>
-          </header>
-          <p class="blog-card-blurb">Making agents play BS with each other</p>
+        <article class="blog-post" data-category="agentic ai">
+          <p class="blog-post-date">2026-04-21 · agentic ai</p>
+          <h2 class="blog-post-title">
+            <a href="blog-aws-strands.html">When AIs Bluff: Building a Multi-Agent BS Card Game</a>
+          </h2>
+          <p class="blog-post-blurb">Making agents play BS with each other</p>
+          <div class="blog-post-tags">
+            <span>agentic ai</span>
+            <span>aws strands</span>
+            <span>multi-agent</span>
+          </div>
         </article>
-        
+
       </div>
+
+      <p class="blog-empty" id="blog-empty" hidden>coming soon...</p>
+
     </div>
-
-    <div class="llm-connector"></div>
-
-    <div class="llm-layer" id="cat-notes">
-      <div class="layer-label">notes</div>
-      <div class="layer-cards">
-        <p class="layer-empty">coming soon...</p>
-      </div>
-    </div>
-
   </div>
 
   <!-- Scroll to top button -->
@@ -112,5 +103,45 @@
   </button>
 
   <script src="script.js"></script>
+  <script>
+    // Topic filtering + mobile topic menu
+    (function () {
+      var topics = document.getElementById('blog-topics');
+      var toggle = document.getElementById('blog-topics-toggle');
+      var current = document.getElementById('blog-topics-current');
+      var buttons = document.querySelectorAll('.blog-filter');
+      var posts = document.querySelectorAll('.blog-post');
+      var empty = document.getElementById('blog-empty');
+
+      function setOpen(open) {
+        topics.classList.toggle('is-open', open);
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      }
+
+      toggle.addEventListener('click', function () {
+        setOpen(!topics.classList.contains('is-open'));
+      });
+
+      buttons.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          buttons.forEach(function (b) { b.classList.remove('is-active'); });
+          btn.classList.add('is-active');
+          current.textContent = btn.textContent;
+
+          var filter = btn.dataset.filter;
+          var visible = 0;
+          posts.forEach(function (post) {
+            var show = filter === 'all' || post.dataset.category === filter;
+            post.hidden = !show;
+            if (show) visible++;
+          });
+          empty.hidden = visible !== 0;
+
+          // close the menu after picking a topic (only matters on mobile)
+          setOpen(false);
+        });
+      });
+    })();
+  </script>
 </body>
 </html>

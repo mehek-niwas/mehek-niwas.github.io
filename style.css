@@ -604,7 +604,7 @@ main {
   line-height: 1.2;
 }
 
-/* Underlined text with pastel green highlight */
+/* Underlined text with pastel pink highlight */
 u {
   background-color: #ffc0da;
   text-decoration: underline;
@@ -626,7 +626,7 @@ u.trigger:hover {
   background-color: hotpink;
 }
 
-/* Darker pastel green when clicked */
+/* Darker pink when clicked */
 u.clicked {
   background-color: hotpink;
   /* color: white; */
@@ -1924,5 +1924,198 @@ u.clicked {
 
   .not-found-deco--right {
     width: 30px;
+  }
+}
+
+/* ─── Blog index (paste at the end of style.css) ─────────────────────────── */
+/* If you pasted the earlier "Blog index" section, replace it with this one.
+   Replaces the old .llm-layout / .llm-layer / .llm-connector / .blog-card
+   styles for the blog page. The tokenized intro styles are still used.     */
+
+/* Two columns: vertical topic nav on the left, posts on the right */
+.blog-layout {
+  display: grid;
+  grid-template-columns: 190px minmax(0, 1fr);
+  column-gap: 40px;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 24px 60px;
+}
+
+.blog-index {
+  min-width: 0;
+}
+
+/* ── Vertical topic nav ── */
+.blog-topics {
+  position: sticky;
+  top: 20px;
+  align-self: start;
+}
+
+.blog-topics-title {
+  margin: 0 0 10px;
+  font-family: 'VT323', monospace;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.blog-topics-toggle {
+  display: none; /* mobile only */
+}
+
+.blog-filters {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.blog-filter {
+  width: 100%;
+  background: #ffc0da;
+  border: none;
+  padding: 8px 14px;
+  font-family: 'VT323', monospace;
+  font-size: 18px;
+  color: #000;
+  text-align: left;
+  cursor: pointer;
+}
+
+.blog-filter:hover,
+.blog-filter.is-active {
+  background: hotpink;
+}
+
+.blog-filter.is-active::before {
+  content: '> ';
+}
+
+/* ── Post list ── */
+.blog-post {
+  padding: 18px 0 22px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.14);
+}
+
+.blog-post:first-child {
+  padding-top: 0;
+}
+
+.blog-post[hidden] {
+  display: none;
+}
+
+.blog-post-date {
+  margin: 0 0 4px;
+  font-family: 'VT323', monospace;
+  font-size: 18px;
+  opacity: 0.65;
+}
+
+.blog-post-title {
+  margin: 0 0 6px;
+  font-family: 'VT323', monospace;
+  font-size: 34px;
+  line-height: 1.05;
+  font-weight: normal;
+}
+
+.blog-post-title a {
+  color: #000;
+  text-decoration: none;
+}
+
+.blog-post-title a:hover {
+  color: hotpink;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.blog-post-blurb {
+  margin: 0 0 12px;
+  font-family: 'VT323', monospace;
+  font-size: 21px;
+  line-height: 1.2;
+}
+
+.blog-post-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.blog-post-tags span {
+  background: rgba(255, 192, 218, 0.45);
+  border-radius: 7px;
+  padding: 2px 8px;
+  font-family: 'VT323', monospace;
+  font-size: 16px;
+}
+
+.blog-empty {
+  margin: 0;
+  font-family: 'VT323', monospace;
+  font-size: 20px;
+  opacity: 0.55;
+}
+
+/* ── Mobile: topic nav becomes a tap-to-open menu above the posts ── */
+@media (max-width: 700px) {
+  .blog-layout {
+    grid-template-columns: 1fr;
+    row-gap: 20px;
+    padding: 0 15px 40px;
+  }
+
+  .blog-topics {
+    position: static;
+  }
+
+  .blog-topics-title {
+    display: none;
+  }
+
+  .blog-topics-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    background: #ffc0da;
+    border: none;
+    padding: 8px 14px;
+    font-family: 'VT323', monospace;
+    font-size: 18px;
+    color: #000;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .blog-topics-toggle:hover,
+  .blog-topics.is-open .blog-topics-toggle {
+    background: hotpink;
+  }
+
+  .blog-topics.is-open .blog-topics-caret {
+    display: inline-block;
+    transform: rotate(180deg);
+  }
+
+  .blog-filters {
+    display: none;
+    margin-top: 8px;
+  }
+
+  .blog-topics.is-open .blog-filters {
+    display: flex;
+  }
+
+  .blog-post-title {
+    font-size: 28px;
+  }
+
+  .blog-post-blurb {
+    font-size: 19px;
   }
 }
