@@ -14,31 +14,150 @@
   <!-- Highlight.js for syntax highlighting -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.css" />
   
-  <!-- Custom code block styling to match your pink aesthetic -->
+  <!-- Article page styling (matches the blog index) -->
   <style>
-    /* Override syntax highlighting colors to match your site
-    pre[class*="language-"] {
-      background: #fff;
-      border-radius: 8px;
-      padding: 12px 16px;
-      margin: 16px 0;
-      overflow-x: auto;
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 14px;
-      line-height: 1.5;
+    /* ── Reading column ───────────────────────────────────────── */
+    .blog-article-main {
+      max-width: 800px;
+      margin: 24px auto 60px;
+      padding: 0 24px;
     }
-    
-    code[class*="language-pytho "] {
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 14px;
-    } */
-    
-    /* Inline code styling */
-    :not(pre) > code[class*="language-"] {
-      background: rgba(255, 192, 218, 0.2);
-      padding: 2px 6px;
-      border-radius: 3px;
+
+    /* ── Back links ───────────────────────────────────────────── */
+    .blog-back {
+      display: inline-block;
+      margin-bottom: 18px;
+      font-family: 'VT323', monospace;
+      font-size: 20px;
       color: #000;
+      text-decoration: none;
+      opacity: 0.75;
+      transition: color 0.2s ease, opacity 0.2s ease;
+    }
+
+    .blog-back:hover {
+      color: hotpink;
+      opacity: 1;
+    }
+
+    .blog-article-footer {
+      margin-top: 48px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(0, 0, 0, 0.14);
+    }
+
+    /* ── Article header: left-aligned, like a post ────────────── */
+    .blog-article-header {
+      margin-top: 0;
+      text-align: left;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.14);
+    }
+
+    .blog-article-header h2 {
+      font-size: 44px;
+      line-height: 1.02;
+      margin: 0 0 10px;
+    }
+
+    .blog-article-kicker {
+      font-size: 24px;
+      color: #333;
+      margin: 0 0 10px;
+    }
+
+    .blog-article-meta {
+      font-size: 19px;
+      line-height: 1.2;
+      color: #666;
+      margin: 0;
+    }
+
+    /* ── Body text: bigger and roomier for long reading ───────── */
+    .blog-article-section {
+      margin-top: 36px;
+    }
+
+    .blog-article-section h3 {
+      font-size: 30px;
+      margin: 0 0 10px;
+    }
+
+    .blog-article-section p,
+    .blog-article-section li {
+      font-size: 17px;
+      line-height: 1.7;
+    }
+
+    .blog-article-section p {
+      margin: 0 0 14px;
+    }
+
+    .blog-article-section ul,
+    .blog-article-section ol {
+      padding-left: 24px;
+      margin: 0 0 14px;
+    }
+
+    .blog-article-section li {
+      margin-bottom: 4px;
+    }
+
+    .blog-article-section a {
+      color: hotpink;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .blog-article-section a:hover {
+      color: #c2185b;
+    }
+
+    /* ── Code ─────────────────────────────────────────────────── */
+    .blog-article-main pre {
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      margin: 16px 0 20px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .blog-article-main pre code,
+    .blog-article-main pre code.hljs {
+      display: block;
+      padding: 14px 16px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 14px;
+      line-height: 1.55;
+      background: transparent;
+    }
+
+    /* inline code */
+    .blog-article-section p code,
+    .blog-article-section li code {
+      background: rgba(255, 192, 218, 0.35);
+      padding: 1px 6px;
+      border-radius: 4px;
+      color: #000;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.88em;
+    }
+
+    /* ── Table ────────────────────────────────────────────────── */
+    .blog-article-main table {
+      font-size: 15px;
+      background: rgba(255, 255, 255, 0.6);
+    }
+
+    @media (max-width: 900px) {
+      .blog-article-header h2 {
+        font-size: 34px;
+      }
+
+      .blog-article-kicker {
+        font-size: 20px !important;
+      }
     }
 
     /* Architecture diagram animations */
@@ -75,6 +194,8 @@
 
   <!-- Blog Article Content -->
   <article class="blog-article-main">
+
+    <a href="https://mehek-niwas.github.io/blog" class="blog-back">← back to blog</a>
     
     <!-- Article Header -->
     <header class="blog-article-header">
@@ -82,9 +203,7 @@
       
       <p class="blog-article-kicker">I wanted to make agents play BS with each other</p>
       
-      <p class="blog-article-meta">
-        <span>2026-04-21</span> · <span>agentic ai, aws strands, multi-agent</span>
-      </p>
+      <p class="blog-article-meta">Apr 21, 2026</p>
     </header>
 
     <!-- Introduction Section -->
@@ -759,15 +878,19 @@ class BSGame:
         This coding demo uses three Strands agents that share a global game state. Each agent has tools decorated with <code>@tool</code>. The chat tool injects messages into other agents' memories for inter-agent communication, enabling them to potentially form strategies (and trash talk). The main game loop implements three phases per turn: play, react, resolve.
       </p>
       <p>
-        Strands reduces the amount of boilerplate needed because it takes care of the tool-call loop internally. Check out the full documentation of Strands here: <a href="https://strandsagents.com/" target="_blank" style="color: hotpink; text-decoration: underline;">strands link</a>
+        Strands reduces the amount of boilerplate needed because it takes care of the tool-call loop internally. Check out the full documentation of Strands here: <a href="https://strandsagents.com/" target="_blank">strands link</a>
       </p>
       <p>
-        Full code for this demo: <a href="https://github.com/rutgers-ml-ai/natural-lang-processing-spring26/blob/main/agentic_ai_aws_strands.ipynb" target="_blank" style="color: hotpink; text-decoration: underline;">demo link</a>
+        Full code for this demo: <a href="https://github.com/rutgers-ml-ai/natural-lang-processing-spring26/blob/main/agentic_ai_aws_strands.ipynb" target="_blank">demo link</a>
       </p>
       <p>
-        I wrote this article on the AWS Builder center too!: <a href="https://bit.ly/4bRihcS" target="_blank" style="color: hotpink; text-decoration: underline;">builder center link</a>
+        I wrote this article on the AWS Builder center too!: <a href="https://bit.ly/4bRihcS" target="_blank">builder center link</a>
       </p>
     </section>
+
+    <div class="blog-article-footer">
+      <a href="https://mehek-niwas.github.io/blog" class="blog-back">← back to blog</a>
+    </div>
 
   </article>
 

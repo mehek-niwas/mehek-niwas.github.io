@@ -1928,7 +1928,7 @@ u.clicked {
 }
 
 /* ─── Blog index (paste at the end of style.css) ─────────────────────────── */
-/* If you pasted the earlier "Blog index" section, replace it with this one.
+/* If you pasted an earlier "Blog index" section, replace it with this one.
    Replaces the old .llm-layout / .llm-layer / .llm-connector / .blog-card
    styles for the blog page. The tokenized intro styles are still used.     */
 
@@ -1951,13 +1951,6 @@ u.clicked {
   position: sticky;
   top: 20px;
   align-self: start;
-}
-
-.blog-topics-title {
-  margin: 0 0 10px;
-  font-family: 'VT323', monospace;
-  font-size: 24px;
-  line-height: 1;
 }
 
 .blog-topics-toggle {
@@ -1992,14 +1985,9 @@ u.clicked {
   content: '> ';
 }
 
-/* ── Post list ── */
+/* ── Post list: plain date / title / blurb, no dividers or tags ── */
 .blog-post {
-  padding: 18px 0 22px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.14);
-}
-
-.blog-post:first-child {
-  padding-top: 0;
+  margin: 0 0 34px;
 }
 
 .blog-post[hidden] {
@@ -2007,26 +1995,32 @@ u.clicked {
 }
 
 .blog-post-date {
-  margin: 0 0 4px;
+  margin: 0 0 2px;
   font-family: 'VT323', monospace;
-  font-size: 18px;
-  opacity: 0.65;
+  font-size: 19px;
+  line-height: 1.2;
+  color: #666;
+  /* color: #545454; */
+  /* color: rgb(58, 18, 42) */
+  
 }
 
 .blog-post-title {
-  margin: 0 0 6px;
+  margin: 0 0 4px;
   font-family: 'VT323', monospace;
-  font-size: 34px;
-  line-height: 1.05;
+  font-size: 30px;
+  line-height: 1.1;
   font-weight: normal;
 }
 
 .blog-post-title a {
-  color: #000;
+  color: rgb(177, 0, 106);
+  /* color: black; */
   text-decoration: none;
 }
 
 .blog-post-title a:hover {
+  /* color: rgb(255, 58, 166); GUYS THIS IS A REALLY YUMMY COLORRRRRRRRRRRRRR */ 
   color: hotpink;
   text-decoration: underline;
   text-decoration-thickness: 1px;
@@ -2034,24 +2028,10 @@ u.clicked {
 }
 
 .blog-post-blurb {
-  margin: 0 0 12px;
+  margin: 0;
   font-family: 'VT323', monospace;
   font-size: 21px;
-  line-height: 1.2;
-}
-
-.blog-post-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.blog-post-tags span {
-  background: rgba(255, 192, 218, 0.45);
-  border-radius: 7px;
-  padding: 2px 8px;
-  font-family: 'VT323', monospace;
-  font-size: 16px;
+  line-height: 1.25;
 }
 
 .blog-empty {
@@ -2071,10 +2051,6 @@ u.clicked {
 
   .blog-topics {
     position: static;
-  }
-
-  .blog-topics-title {
-    display: none;
   }
 
   .blog-topics-toggle {
@@ -2112,7 +2088,7 @@ u.clicked {
   }
 
   .blog-post-title {
-    font-size: 28px;
+    font-size: 27px;
   }
 
   .blog-post-blurb {
